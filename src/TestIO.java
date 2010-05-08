@@ -16,12 +16,16 @@ public class TestIO {
 
 			Kn<String> kn = new Kn<String>(values);
 			Cn<String> cn = new Cn<String>(values);
+			WheelGraph<String> wn = new WheelGraph<String>(values, "Centro");
 			RandomGraph rn = new RandomGraph(100, 300);
+			HararyGraph hn = new HararyGraph(5, 8);
 
 			GraphExporter.exportGraph("outRandom.dot", rn);
 			GraphExporter.exportGraph("outKn.dot", kn);
 			GraphExporter.exportGraph("outCicle.dot", cn);
+			GraphExporter.exportGraph("outWheel.dot", wn);
 			GraphExporter.exportGraph("out.dot", graph);
+			GraphExporter.exportGraph("outHarary.dot", hn);
 
 		} catch (IOException e) {
 			System.out.println(e);
