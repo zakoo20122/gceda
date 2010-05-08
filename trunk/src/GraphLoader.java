@@ -17,7 +17,7 @@ public class GraphLoader {
 				// Verifica si hay una unica ',' en la linea
 				if (separator != -1 && separator == line.lastIndexOf(",")) {
 					String vertex1 = line.substring(0, separator);
-					String vertex2 = line.substring(separator, line.length());
+					String vertex2 = line.substring(separator+1, line.length());
 					graph.addVertex(vertex1);
 					graph.addVertex(vertex2);
 					graph.addEdge(vertex1, vertex2);

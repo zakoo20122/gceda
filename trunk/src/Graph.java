@@ -150,6 +150,7 @@ public class Graph<V> {
 			for (Edge e : node.adj) {
 				l.add(e.neighbor.info);
 			}
+			return l;
 		}
 		return null;
 	}
@@ -181,6 +182,10 @@ public class Graph<V> {
 			l.add(nodes.get(it.next()));
 		}
 		return l;
+	}
+
+	public List<V> DFS() {
+		return DFS(getNodes().get(0).info);
 	}
 
 	public List<V> DFS(V origin) {
