@@ -18,7 +18,7 @@ public class TestIO {
 			Cn<String> cn = new Cn<String>(values);
 			WheelGraph<String> wn = new WheelGraph<String>(values, "Centro");
 			RandomGraph rn = new RandomGraph(100, 300);
-			HararyGraph hn = new HararyGraph(5, 8);
+			HararyGraph hn = new HararyGraph(5, 9);
 
 			GraphExporter.exportGraph("outRandom.dot", rn);
 			GraphExporter.exportGraph("outKn.dot", kn);

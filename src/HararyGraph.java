@@ -38,7 +38,7 @@ public class HararyGraph extends Graph<Integer> {
 			} else {
 				this.addEdge(0, (n - 1) / 2);
 				this.addEdge(0, (n + 1) / 2);
-				for (int i = 0; i < (n - 3) / 2; i++)
+				for (int i = 0; i <= (n - 3) / 2; i++)
 					this.addEdge(i, i + (n + 1) / 2);
 			}
 		}
