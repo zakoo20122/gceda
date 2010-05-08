@@ -18,8 +18,9 @@ public class GraphExporter {
 
 			output.write("graph G { ");
 			output.newLine();
-			output
-					.write("graph [splines = true] node [style=filled fillcolor=\"#FF0000\"]");
+			output.write("graph [splines = true] "
+					+ "node [height=0.4 fixedsize=true shape=circle]");
+			output.newLine();
 
 			List<String> nodes = graph.DFS();
 			HashMap<String, List<String>> outGraph = new HashMap<String, List<String>>();
