@@ -16,8 +16,10 @@ public class GraphExporter {
 			File file = new File(fileName);
 			output = new BufferedWriter(new FileWriter(file));
 
-			output.write("graph G {");
+			output.write("graph G { ");
 			output.newLine();
+			output
+					.write("graph [splines = true] node [style=filled fillcolor=\"#FF0000\"]");
 
 			List<String> nodes = graph.DFS();
 			HashMap<String, List<String>> outGraph = new HashMap<String, List<String>>();
