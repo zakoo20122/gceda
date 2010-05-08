@@ -9,7 +9,7 @@ import java.util.Map.Entry;
 
 public class GraphExporter {
 
-	public static void exportGraph(String fileName, Graph<String> graph)
+	public static <T> void exportGraph(String fileName, Graph<T> graph)
 			throws IOException {
 		BufferedWriter output = null;
 		try {
@@ -19,20 +19,20 @@ public class GraphExporter {
 			output.write("graph G { ");
 			output.newLine();
 			output.write("graph [splines = true] "
-					+ "node [height=0.4 fixedsize=true shape=circle]");
+					+ "node [height=0.4 shape=circle]");
 			output.newLine();
 
-			List<String> nodes = graph.DFS();
-			HashMap<String, List<String>> outGraph = new HashMap<String, List<String>>();
+			List<T> nodes = graph.DFS();
+			HashMap<T, List<T>> outGraph = new HashMap<T, List<T>>();
 
 			/*
 			 * Remove edge redundancy
 			 */
-			for (String node : nodes) {
-				List<String> neighbors = graph.neighbors(node);
-				for (String neighbor : neighbors) {
+			for (T node : nodes) {
+				List<T> neighbors = graph.neighbors(node);
+				for (T neighbor : neighbors) {
 					if (outGraph.containsKey(neighbor)) {
-						List<String> other = outGraph.get(neighbor);
+						List<T> other = outGraph.get(neighbor);
 						other.remove(node);
 					}
 				}
@@ -42,10 +42,10 @@ public class GraphExporter {
 			/*
 			 * Get data for exporting
 			 */
-			Set<Entry<String, List<String>>> entries = outGraph.entrySet();
+			Set<Entry<T, List<T>>> entries = outGraph.entrySet();
 
-			for (Entry<String, List<String>> entry : entries) {
-				for (String neighbor : entry.getValue()) {
+			for (Entry<T, List<T>> entry : entries) {
+				for (T neighbor : entry.getValue()) {
 					String line = "";
 					line += entry.getKey() + " -- " + neighbor + ";";
 					output.write(line);
