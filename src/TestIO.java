@@ -16,7 +16,9 @@ public class TestIO {
 
 			Kn<String> kn = new Kn<String>(values);
 			Cn<String> cn = new Cn<String>(values);
+			RandomGraph rn = new RandomGraph(100, 300);
 
+			GraphExporter.exportGraph("outRandom.dot", rn);
 			GraphExporter.exportGraph("outKn.dot", kn);
 			GraphExporter.exportGraph("outCicle.dot", cn);
 			GraphExporter.exportGraph("out.dot", graph);
