@@ -3,11 +3,11 @@ import java.util.List;
 
 /**
  * Harary graph
+ * 
  * @author Mariano
- *
+ * 
  */
 public class HararyGraph extends Graph<Integer> {
-
 
 	// OJO, ANDA MAL EN ALGUNOS CASOS - REVISAR
 	public HararyGraph(int k, int n) {
@@ -31,9 +31,9 @@ public class HararyGraph extends Graph<Integer> {
 					this.addEdge(i, j);
 
 		// Second pass
-		if (k % 2 != 0)
+		if (k % 2 != 0) {
 			if (n % 2 == 0) {
-				for (int i = 0; i < (n / 2) - 1; i++)
+				for (int i = 0; i < (n / 2); i++)
 					this.addEdge(i, i + (n / 2));
 			} else {
 				this.addEdge(0, (n - 1) / 2);
@@ -41,6 +41,6 @@ public class HararyGraph extends Graph<Integer> {
 				for (int i = 0; i < (n - 3) / 2; i++)
 					this.addEdge(i, i + (n + 1) / 2);
 			}
-
+		}
 	}
 }
