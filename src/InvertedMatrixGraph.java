@@ -1,4 +1,6 @@
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class InvertedMatrixGraph<T> {
@@ -77,28 +79,47 @@ public class InvertedMatrixGraph<T> {
 	private List<BitRow> rows;
 	private Graph<T> graph;
 	private int vertexCount;
-	private List<List<Integer>> equivalenceClasses;
+	// A list of groups which contain possible equivalence classes
+	private List<List<List<Integer>>> possibleEquivalenceClasses;
+
+	// The real list of equivalence classes. This is the minimal coloring
+	private List<List<Integer>> minimalEquivalenceClasses;
 
 	public static void main(String args[]) {
 
+		long init, interval;
+
 		List<String> values = new ArrayList<String>();
-		int size = 5;
+		int size = 30;
 		for (int i = 0; i < size; i++)
 			values.add(String.valueOf(i));
 
-		Cn<String> cn = new Cn<String>(values);
-		InvertedMatrixGraph<String> matrix = new InvertedMatrixGraph<String>(cn);
-		matrix.print();
+		init = (new Date()).getTime();
+		HararyGraph hn = new HararyGraph(7, 10);
+		interval = (new Date()).getTime() - init;
+		System.out.println(interval);
 
+		init = (new Date()).getTime();
+		InvertedMatrixGraph<Integer> matrix = new InvertedMatrixGraph<Integer>(
+				hn);
+
+		interval = (new Date()).getTime() - init;
+		System.out.println(interval);
+
+		init = (new Date()).getTime();
 		System.out.println("");
 		matrix.getEquivalenceClasses();
+
+		interval = (new Date()).getTime() - init;
+		System.out.println(interval);
+
 	}
 
 	public InvertedMatrixGraph(Graph<T> graph) {
 		this.graph = graph;
 		this.rows = new ArrayList<BitRow>();
 		this.vertexCount = graph.vertexCount();
-		this.equivalenceClasses = new ArrayList<List<Integer>>();
+		this.possibleEquivalenceClasses = new ArrayList<List<List<Integer>>>();
 
 		addVertices();
 		addEdges();
@@ -128,7 +149,6 @@ public class InvertedMatrixGraph<T> {
 				// If there is an edge between vertex I and J
 				if (graph.neighbors(nodes.get(i)).contains(nodes.get(j))) {
 					rows.get(i).addEdge(j);
-					rows.get(j).addEdge(i);
 				}
 	}
 
@@ -137,7 +157,8 @@ public class InvertedMatrixGraph<T> {
 			System.out.println(br);
 	}
 
-	public boolean getRamification(BitRow actual, int index) {
+	public boolean getRamification(BitRow actual, int index,
+			List<List<Integer>> group) {
 
 		boolean last = true;
 
@@ -147,9 +168,9 @@ public class InvertedMatrixGraph<T> {
 
 			if (next.isConsistent()) {
 				// If next ramification is the last one, then add this eq. class
-				if (getRamification(next, i)) {
+				if (getRamification(next, i, group)) {
 					// System.out.println("LASSST" + next);
-					equivalenceClasses.add(next.getInfo());
+					group.add(next.getInfo());
 				}
 				// But this ramification isn't the last, so return false
 				last = false;
@@ -160,12 +181,14 @@ public class InvertedMatrixGraph<T> {
 	}
 
 	public void getEquivalenceClasses() {
+
 		for (int i = 0; i < vertexCount; i++) {
-			getRamification(rows.get(i), i);
+			possibleEquivalenceClasses.add(new ArrayList<List<Integer>>());
+			getRamification(rows.get(i), i, possibleEquivalenceClasses.get(i));
 		}
 
-		System.out
-				.println("Posible equivalence classes: " + equivalenceClasses);
+		System.out.println("Posible equivalence classes: "
+				+ possibleEquivalenceClasses);
 	}
 
 }
