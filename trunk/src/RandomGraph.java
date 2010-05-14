@@ -17,7 +17,7 @@ public class RandomGraph extends Graph<String> {
 		}
 
 		// Add edges
-		for (int i = 0; i < edgeCount; i++) {
+		for (int i = 0; i < edgeCount || !isConnected(); i++) {
 			int v1;
 			int v2;
 			do {
