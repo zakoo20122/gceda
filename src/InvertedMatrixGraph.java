@@ -80,38 +80,53 @@ public class InvertedMatrixGraph<T> {
 	private Graph<T> graph;
 	private int vertexCount;
 	// A list of groups which contain possible equivalence classes
-	private List<List<List<Integer>>> possibleEquivalenceClasses;
+	private List<List<List<Integer>>> possible;
 
 	// The real list of equivalence classes. This is the minimal coloring
-	private List<List<Integer>> minimalEquivalenceClasses;
+	private List<List<Integer>> minimal;
 
 	public static void main(String args[]) {
 
-		long init, interval;
+		try {
+			long init, interval;
 
-		List<String> values = new ArrayList<String>();
-		int size = 30;
-		for (int i = 0; i < size; i++)
-			values.add(String.valueOf(i));
+			List<String> values = new ArrayList<String>();
+			int size = 800;
+			for (int i = 0; i < size; i++)
+				values.add(String.valueOf(i));
 
-		init = (new Date()).getTime();
-		HararyGraph hn = new HararyGraph(7, 10);
-		interval = (new Date()).getTime() - init;
-		System.out.println(interval);
+			init = (new Date()).getTime();
+			Kn<String> kn = new Kn<String>(values);
+			interval = (new Date()).getTime() - init;
+			System.out.println("Tiempo en crear grafo: " + interval);
 
-		init = (new Date()).getTime();
-		InvertedMatrixGraph<Integer> matrix = new InvertedMatrixGraph<Integer>(
-				hn);
+			init = (new Date()).getTime();
+			InvertedMatrixGraph<String> matrix = new InvertedMatrixGraph<String>(
+					kn);
 
-		interval = (new Date()).getTime() - init;
-		System.out.println(interval);
+			interval = (new Date()).getTime() - init;
+			System.out.println("Tiempo en crear matriz: " + interval);
 
-		init = (new Date()).getTime();
-		System.out.println("");
-		matrix.getEquivalenceClasses();
+			init = (new Date()).getTime();
+			matrix.getEquivalenceClasses();
 
-		interval = (new Date()).getTime() - init;
-		System.out.println(interval);
+			interval = (new Date()).getTime() - init;
+			System.out.println("Tiempo en buscar clases de equivalencia: "
+					+ interval);
+
+			init = (new Date()).getTime();
+			matrix.searchMinimalColoring();
+
+			interval = (new Date()).getTime() - init;
+			System.out.println("Tiempo en buscar el minimo coloreo: "
+					+ interval);
+
+			System.out.println("Coloreo minimo: ");
+			System.out.println(matrix.getMinimalColoring());
+
+		} catch (Exception e) {
+			System.out.println(e);
+		}
 
 	}
 
@@ -119,7 +134,7 @@ public class InvertedMatrixGraph<T> {
 		this.graph = graph;
 		this.rows = new ArrayList<BitRow>();
 		this.vertexCount = graph.vertexCount();
-		this.possibleEquivalenceClasses = new ArrayList<List<List<Integer>>>();
+		this.possible = new ArrayList<List<List<Integer>>>();
 
 		addVertices();
 		addEdges();
@@ -182,13 +197,97 @@ public class InvertedMatrixGraph<T> {
 
 	public void getEquivalenceClasses() {
 
+		// Create a group for the i-th vertex, then search for equivalence
+		// classes
 		for (int i = 0; i < vertexCount; i++) {
-			possibleEquivalenceClasses.add(new ArrayList<List<Integer>>());
-			getRamification(rows.get(i), i, possibleEquivalenceClasses.get(i));
+			possible.add(new ArrayList<List<Integer>>());
+			getRamification(rows.get(i), i, possible.get(i));
 		}
 
-		System.out.println("Posible equivalence classes: "
-				+ possibleEquivalenceClasses);
+		/*
+		 * If there are empty groups, then add independent colors to those
+		 * vertices, because they may be isolated colors (probably a clique).
+		 */
+		for (int i = 0; i < vertexCount; i++) {
+			if (possible.get(i).isEmpty()) {
+				List<Integer> uniqueColor = new ArrayList<Integer>();
+				uniqueColor.add(i);
+				possible.get(i).add(uniqueColor);
+			}
+		}
+
 	}
 
+	public List<List<Integer>> getMinimalColoring() {
+		return minimal;
+	}
+
+	/**
+	 * The concept of this method is: start by combining the possible
+	 * equivalence classes grouped by vertex. Then, find the list of equivalence
+	 * classes that has minimum classes but maximum quantity of vertices.
+	 */
+	private void searchMinimalColoring() {
+
+		List<List<List<Integer>>> combinedClasses = new ArrayList<List<List<Integer>>>();
+		combineClasses(0, new ArrayList<List<Integer>>(), combinedClasses);
+
+		List<List<Integer>> min = null;
+
+		// Now it is a matter of finding the minimal set with all vertices
+		for (List<List<Integer>> combination : combinedClasses) {
+
+			int sum = 0;
+			for (List<Integer> eqClass : combination)
+				sum += eqClass.size();
+
+			if (sum == vertexCount
+					&& (min == null || combination.size() < min.size()))
+				min = combination;
+		}
+
+		minimal = min;
+	}
+
+	/*
+	 * Note that as the algorithm iterates over each group, it is guaranteed
+	 * that any further group won't contain the characteristic vertex of that
+	 * group. That is, the last group which may contain the I-eth vertex is the
+	 * I-eth group. This is due to the recursive algorithm that finds all
+	 * possible equivalence classes
+	 */
+	private void combineClasses(int i, List<List<Integer>> ramification,
+			List<List<List<Integer>>> combinedClasses) {
+
+		// If there are no more eq. classes, add the resulting equivalence class
+		if (i >= possible.size() || possible.get(i).isEmpty()) {
+			combinedClasses.add(ramification);
+			return;
+		} else {
+			for (List<Integer> eqClass : possible.get(i)) {
+
+				/*
+				 * Check if this vertex has already been used. If that's the
+				 * case, ignore this branch. This is useful to get to the
+				 * isolated vertices, exploring further combinations.
+				 */
+				boolean exists = false;
+				for (Integer v : eqClass)
+					for (List<Integer> list : ramification)
+						for (Integer w : list)
+							if (v == w) {
+								exists = true;
+							}
+
+				// Add this eq Class
+				List<List<Integer>> next = new ArrayList<List<Integer>>();
+				next.addAll(ramification);
+				if (!exists)
+					next.add(eqClass);
+
+				// Go deeper in the tree.
+				combineClasses(i + 1, next, combinedClasses);
+			}
+		}
+	}
 }
