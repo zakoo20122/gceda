@@ -289,7 +289,6 @@ public class Graph<V> {
 		if (node.info != null) {
 			color(node, available);
 		}
-		node.visited = true;
 		// Si la cantidad de colores disponibles supera
 		// la cantidad de colores usados en la mejor solucion
 		// hasta ahora, no sigue por esa posibilidad
@@ -298,24 +297,26 @@ public class Graph<V> {
 			if (solutionColors != 0 && available.size() > solutionColors)
 				return;
 		}
-		/*System.out.println(node.info + "-" + node.color);*/
+		/* System.out.println(node.info + "-" + node.color); */
 		for (Edge edge : node.adj) {
-			// Si no se coloreo aun
-			if (!edge.neighbor.visited) {
+			// Si no es el ficticio y no se coloreo aun
+			if (edge.neighbor.info != null && edge.neighbor.color == -1) {
 				perfectColoring(edge.neighbor, available);
 			}
 		}
 		int usedColors = this.usedColors();
-		/*System.out.print("- used:" + usedColors);
-		System.out.println("- available:" + available.size());*/
+		/*
+		 * System.out.print("- used:" + usedColors);
+		 * System.out.println("- available:" + available.size());
+		 */
 
-		//Si coloreo todos los vertices y todavia no habia llegado a una solucion
-		//o llego a una mejor que la que ya existia la reemplaza
+		// Si coloreo todos los vertices y todavia no habia llegado a una
+		// solucion
+		// o llego a una mejor que la que ya existia la reemplaza
 		if (usedColors != 0 && (aux == null || available.size() < usedColors)) {
 			aux = new Graph<V>(this);
-			/*System.out.println("asadasdasdasdasds");*/
+			/* System.out.println("asadasdasdasdasds"); */
 		}
-		node.visited = false;
 		node.color = -1;
 	}
 
