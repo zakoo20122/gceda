@@ -294,10 +294,14 @@ public class Graph<V> {
 		// hasta ahora, no sigue por esa posibilidad
 		if (aux != null) {
 			int solutionColors = aux.usedColors();
-			if (solutionColors != 0 && available.size() > solutionColors)
+			if (solutionColors != 0 && available.size() > solutionColors) {
+				node.color = -1;
+				available.remove(available.size() - 1);
 				return;
+			}
+
 		}
-		/* System.out.println(node.info + "-" + node.color); */
+
 		for (Edge edge : node.adj) {
 			// Si no es el ficticio y no se coloreo aun
 			if (edge.neighbor.info != null && edge.neighbor.color == -1) {
@@ -305,6 +309,7 @@ public class Graph<V> {
 			}
 		}
 		int usedColors = this.usedColors();
+
 		/*
 		 * System.out.print("- used:" + usedColors);
 		 * System.out.println("- available:" + available.size());
@@ -331,6 +336,7 @@ public class Graph<V> {
 				return 0;
 			ans.add(node.color);
 		}
+		// Retorna la cantidad de nodos menos uno porque no cuenta al ficticio
 		return ans.size() - 1;
 	}
 
@@ -341,19 +347,14 @@ public class Graph<V> {
 				disabled.add(edge.neighbor.color);
 			}
 		}
-
 		if (disabled.size() == available.size()) {
 			Integer newColor = available.get(available.size() - 1) + 1;
 			available.add(newColor);
 			node.color = newColor;
 		} else {
-			int i = 0, aux;
-			while (node.color == -1) {
-				aux = available.get(i);
-				if (!disabled.contains(aux))
-					node.color = aux;
-				i++;
-			}
+			List<Integer> tmp = new ArrayList<Integer>(available);
+			tmp.removeAll(disabled);
+			node.color = tmp.get(0);
 		}
 	}
 
