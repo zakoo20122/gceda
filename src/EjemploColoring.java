@@ -7,11 +7,11 @@ public class EjemploColoring {
 
 	public static void main(String args[]) throws IOException{
 		List<String> values = new ArrayList<String>();
-		for (int i = 0; i < 6; i++)
+		for (int i = 0; i < 400; i++)
 			values.add(String.valueOf(Character.toChars(65+i)));
 
 		
-		Graph<String> g = new Kn<String>(values);
+		Graph<String> g = new Cn<String>(values);
 		long time = System.currentTimeMillis();
 		Graph<String> aux = g.perfectColoring();
 		System.out.println(System.currentTimeMillis()-time);
