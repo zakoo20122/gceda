@@ -13,9 +13,9 @@ public class EjemploColoring {
 		
 		Graph<String> g = new Cn<String>(values);
 		long time = System.currentTimeMillis();
-		Graph<String> aux = g.perfectColoring();
+		g.perfectColoring();
 		System.out.println(System.currentTimeMillis()-time);
-		aux.printColors();
-		GraphExporter.exportGraph("asdasdasd.dot", aux);
+		g.printColors();
+		GraphExporter.exportGraph("asdasdasd.dot", g);
 	}
 }
