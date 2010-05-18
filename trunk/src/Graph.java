@@ -13,12 +13,12 @@ public class Graph<V> {
 		public V info;
 		public boolean visited;
 		public int color;
-		public List<Edge> adj;
+		public List<Node> adj;
 
 		public Node(V info) {
 			this.info = info;
 			this.visited = false;
-			this.adj = new ArrayList<Edge>();
+			this.adj = new ArrayList<Node>();
 			this.color = -1;
 		}
 
@@ -48,62 +48,26 @@ public class Graph<V> {
 		}
 	}
 
-	private class Edge {
-		public Node neighbor;
-
-		public Edge(Node neighbor) {
-			super();
-			this.neighbor = neighbor;
+	private class NodeColor{
+		private V info;
+		private int color;
+		
+		public NodeColor(V info, int color){
+			this.info = info;
+			this.color = color;
 		}
-
-		@Override
-		public int hashCode() {
-			final int prime = 31;
-			int result = 1;
-			result = prime * result
-					+ ((neighbor == null) ? 0 : neighbor.hashCode());
-			return result;
+		
+		public String toString(){
+			return info.toString()+color;
 		}
-
-		// Considero que son iguales si "apuntan" al mismo nodo (para no agregar
-		// dos ejes al mismo nodo)
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			final Edge other = (Edge) obj;
-			if (neighbor == null) {
-				if (other.neighbor != null)
-					return false;
-			} else if (!neighbor.equals(other.neighbor))
-				return false;
-			return true;
-		}
-
 	}
-
+	
 	private HashMap<V, Node> nodes;
-	// REVISAR COMO MEJORAR ESTO
-	// ES EL BACKUP DEL GRAFO NECESARIO PARA EL COLOREO
-	private Graph<V> aux;
+	private List <NodeColor> colored;
 
 	public Graph() {
 		this.nodes = new HashMap<V, Node>();
-	}
-
-	public Graph(Graph<V> graph) {
-		this.nodes = new HashMap<V, Node>();
-		for (Node node : graph.getNodes()) {
-			this.addVertex(node.info);
-			this.nodes.get(node.info).color = node.color;
-			for (Edge edge : node.adj) {
-				this.addEdge(node.info, edge.neighbor.info);
-			}
-		}
+		this.colored = new ArrayList<NodeColor>();
 	}
 
 	public boolean isEmpty() {
@@ -120,10 +84,9 @@ public class Graph<V> {
 		Node origin = nodes.get(v);
 		Node dest = nodes.get(w);
 		if (origin != null && dest != null && !origin.equals(dest)) {
-			Edge edge = new Edge(dest);
-			if (!origin.adj.contains(edge)) {
-				origin.adj.add(edge);
-				dest.adj.add(new Edge(origin));
+			if (!origin.adj.contains(dest)) {
+				origin.adj.add(dest);
+				dest.adj.add(origin);
 			}
 		}
 	}
@@ -143,8 +106,8 @@ public class Graph<V> {
 		Node dest = nodes.get(w);
 		if (dest == null)
 			return;
-		origin.adj.remove(new Edge(dest));
-		dest.adj.remove(new Edge(origin));
+		origin.adj.remove(dest);
+		dest.adj.remove(origin);
 	}
 
 	public boolean isEdge(V v, V w) {
@@ -152,21 +115,20 @@ public class Graph<V> {
 		if (origin == null)
 			return false;
 
-		for (Edge e : origin.adj) {
-			if (e.neighbor.info.equals(w)) {
+		for (Node neighbor : origin.adj) {
+			if (neighbor.info.equals(w)) {
 				return true;
 			}
 		}
 		return false;
-
 	}
 
 	public List<V> neighbors(V v) {
 		Node node = nodes.get(v);
 		if (node != null) {
 			List<V> l = new ArrayList<V>(node.adj.size());
-			for (Edge e : node.adj) {
-				l.add(e.neighbor.info);
+			for (Node neighbor : node.adj) {
+				l.add(neighbor.info);
 			}
 			return l;
 		}
@@ -179,10 +141,9 @@ public class Graph<V> {
 			return;
 
 		// Primero removerlo de la lista de adyacencia de sus vecinos
-		Edge e = new Edge(node);
 		for (Node n : getNodes()) {
 			if (!n.equals(node))
-				n.adj.remove(e);
+				n.adj.remove(node);
 		}
 
 		// Eliminar el nodo
@@ -227,8 +188,8 @@ public class Graph<V> {
 			return;
 		l.add(origin.info);
 		origin.visited = true;
-		for (Edge e : origin.adj)
-			DFS(e.neighbor, l);
+		for (Node neighbor : origin.adj)
+			DFS(neighbor, l);
 	}
 
 	public List<V> BFS(V origin) {
@@ -244,9 +205,9 @@ public class Graph<V> {
 			node = q.poll();
 			l.add(node.info);
 			node.visited = true;
-			for (Edge e : node.adj) {
-				if (!e.neighbor.visited) {
-					q.add(e.neighbor);
+			for (Node neighbor : node.adj) {
+				if (!neighbor.visited) {
+					q.add(neighbor);
 				}
 			}
 		}
@@ -269,7 +230,7 @@ public class Graph<V> {
 		return true;
 	}
 
-	public Graph<V> perfectColoring() {
+	public void perfectColoring() {
 		// Agrego un nodo ficticio unido a todos los demas
 		addVertex(null);
 		for (Node node : getNodes()) {
@@ -280,8 +241,9 @@ public class Graph<V> {
 		available.add(0);
 		perfectColoring(nodes.get(null), available);
 		removeVertex(null);
-		aux.removeVertex(null);
-		return aux;
+		for(NodeColor node: colored){
+			nodes.get(node.info).color = node.color;
+		}
 	}
 
 	private void perfectColoring(Node node, List<Integer> available) {
@@ -292,69 +254,78 @@ public class Graph<V> {
 		// Si la cantidad de colores disponibles supera
 		// la cantidad de colores usados en la mejor solucion
 		// hasta ahora, no sigue por esa posibilidad
-		if (aux != null) {
-			int solutionColors = aux.usedColors();
-			if (solutionColors != 0 && available.size() > solutionColors) {
-				node.color = -1;
-				available.remove(available.size() - 1);
-				return;
-			}
-
+		int usedColors = usedColors();
+		if(usedColors != 0 && available.size() > usedColors){
+			node.color = -1;
+			available.remove(available.size() - 1);
+			return;
 		}
-
-		for (Edge edge : node.adj) {
+		
+		//System.out.println(node.info+": "+node.color);
+		for (Node neighbor : node.adj) {
 			// Si no es el ficticio y no se coloreo aun
-			if (edge.neighbor.info != null && edge.neighbor.color == -1) {
-				perfectColoring(edge.neighbor, available);
+			if (neighbor.info != null && neighbor.color == -1) {
+				perfectColoring(neighbor, available);
 			}
 		}
-		int usedColors = this.usedColors();
 
-		/*
-		 * System.out.print("- used:" + usedColors);
-		 * System.out.println("- available:" + available.size());
-		 */
+		usedColors = usedColors();
+		//System.out.print("- used:" + usedColors);
+		//System.out.println("- available:" + available.size());
 
 		// Si coloreo todos los vertices y todavia no habia llegado a una
-		// solucion
-		// o llego a una mejor que la que ya existia la reemplaza
-		if (usedColors != 0 && (aux == null || available.size() < usedColors)) {
-			aux = new Graph<V>(this);
-			/* System.out.println("asadasdasdasdasds"); */
+		// solucion o llego a una mejor que la que ya existia la reemplaza
+		if (usedColors == 0 || available.size() < usedColors) {
+			backUp();
+			//System.out.println("asadasdasdasdasds");
 		}
 		node.color = -1;
 	}
 
+	
+	/*
+	 * Contiene por cada nodo, su informacion y su color
+	 */
+	private void backUp(){
+		colored.clear();
+		for(Node node: getNodes()){
+			if(node.info != null)
+				colored.add(new NodeColor(node.info, node.color));
+		}
+	}
+	
 	/*
 	 * Retorna la cantidad de colores distintos usados en el grafo, 0 en el caso
 	 * de que el mismo no este completamente coloreado o si el grafo esta vacio
 	 */
 	private int usedColors() {
 		Set<Integer> ans = new HashSet<Integer>();
-		for (Node node : getNodes()) {
-			if (node.info != null && node.color == -1)
-				return 0;
+		for (NodeColor node : colored) {
 			ans.add(node.color);
 		}
-		// Retorna la cantidad de nodos menos uno porque no cuenta al ficticio
-		return ans.size() - 1;
+		return ans.size();
 	}
 
 	private void color(Node node, List<Integer> available) {
 		Set<Integer> disabled = new HashSet<Integer>();
-		for (Edge edge : node.adj) {
-			if (edge.neighbor.color != -1) {
-				disabled.add(edge.neighbor.color);
+		for (Node neighbor : node.adj) {
+			if (neighbor.color != -1) {
+				disabled.add(neighbor.color);
 			}
 		}
 		if (disabled.size() == available.size()) {
-			Integer newColor = available.get(available.size() - 1) + 1;
+			int newColor = available.get(available.size() - 1) + 1;
 			available.add(newColor);
 			node.color = newColor;
 		} else {
-			List<Integer> tmp = new ArrayList<Integer>(available);
-			tmp.removeAll(disabled);
-			node.color = tmp.get(0);
+			int i = 0;
+			while (node.color == -1) {
+				int newColor = available.get(i);
+				if (!disabled.contains(newColor)) {
+					node.color = newColor;
+				}
+				i++;
+			}
 		}
 	}
 
