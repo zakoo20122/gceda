@@ -48,26 +48,12 @@ public class Graph<V> {
 		}
 	}
 
-	private class NodeColor{
-		private V info;
-		private int color;
-		
-		public NodeColor(V info, int color){
-			this.info = info;
-			this.color = color;
-		}
-		
-		public String toString(){
-			return info.toString()+color;
-		}
-	}
-	
 	private HashMap<V, Node> nodes;
-	private List <NodeColor> colored;
+	private List<State<V>> colored;
 
 	public Graph() {
 		this.nodes = new HashMap<V, Node>();
-		this.colored = new ArrayList<NodeColor>();
+		this.colored = new ArrayList<State<V>>();
 	}
 
 	public boolean isEmpty() {
@@ -230,7 +216,7 @@ public class Graph<V> {
 		return true;
 	}
 
-	public void perfectColoring() {
+	public Graph<State<V>> perfectColoring() {
 		// Agrego un nodo ficticio unido a todos los demas
 		addVertex(null);
 		for (Node node : getNodes()) {
@@ -238,70 +224,74 @@ public class Graph<V> {
 		}
 		// Lista de colores disponibles
 		List<Integer> available = new ArrayList<Integer>();
+		Graph<State<V>> tree = new Graph<State<V>>();
 		available.add(0);
-		perfectColoring(nodes.get(null), available);
+		perfectColoring(nodes.get(null), available, tree);
 		removeVertex(null);
-		for(NodeColor node: colored){
-			nodes.get(node.info).color = node.color;
+		for (State<V> state : colored) {
+			nodes.get(state.getInfo()).color = state.getColor();
 		}
+		return tree;
 	}
 
-	private void perfectColoring(Node node, List<Integer> available) {
+	private State<V> perfectColoring(Node node, List<Integer> available, Graph<State<V>> tree) {
 		// Colorea si no es el nodo ficticio
 		if (node.info != null) {
 			color(node, available);
 		}
+		State<V> state = new State<V>(node.info, node.color);
+		tree.addVertex(state);
 		// Si la cantidad de colores disponibles supera
 		// la cantidad de colores usados en la mejor solucion
 		// hasta ahora, no sigue por esa posibilidad
 		int usedColors = usedColors();
-		if(usedColors != 0 && available.size() > usedColors){
+		if (usedColors != 0 && available.size() > usedColors) {
 			node.color = -1;
 			available.remove(available.size() - 1);
-			return;
+			return state;
 		}
-		
+
 		//System.out.println(node.info+": "+node.color);
 		for (Node neighbor : node.adj) {
 			// Si no es el ficticio y no se coloreo aun
 			if (neighbor.info != null && neighbor.color == -1) {
-				perfectColoring(neighbor, available);
+				State<V> neighborState = perfectColoring(neighbor, available, tree);
+				tree.addEdge(state, neighborState);
 			}
 		}
 
 		usedColors = usedColors();
-		//System.out.print("- used:" + usedColors);
-		//System.out.println("- available:" + available.size());
+		// System.out.print("- used:" + usedColors);
+		// System.out.println("- available:" + available.size());
 
 		// Si coloreo todos los vertices y todavia no habia llegado a una
 		// solucion o llego a una mejor que la que ya existia la reemplaza
 		if (usedColors == 0 || available.size() < usedColors) {
 			backUp();
-			//System.out.println("asadasdasdasdasds");
 		}
 		node.color = -1;
+		return state;
 	}
 
-	
 	/*
 	 * Contiene por cada nodo, su informacion y su color
 	 */
-	private void backUp(){
+	private void backUp() {
 		colored.clear();
-		for(Node node: getNodes()){
-			if(node.info != null)
-				colored.add(new NodeColor(node.info, node.color));
+		for (Node node : getNodes()) {
+			if (node.info != null)
+				colored.add(new State<V>(node.info, node.color));
 		}
 	}
-	
+
 	/*
 	 * Retorna la cantidad de colores distintos usados en el grafo, 0 en el caso
 	 * de que el mismo no este completamente coloreado o si el grafo esta vacio
 	 */
 	private int usedColors() {
 		Set<Integer> ans = new HashSet<Integer>();
-		for (NodeColor node : colored) {
-			ans.add(node.color);
+		for (State<V> state : colored) {
+			ans.add(state.getColor());
 		}
 		return ans.size();
 	}
