@@ -82,7 +82,7 @@ public class InvertedMatrixGraph<T> {
 	private List<List<List<Integer>>> possible;
 
 	// The real list of equivalence classes. This is the minimal coloring
-	private List<List<Integer>> minimal;
+	private List<List<T>> minimal;
 
 	public static void main(String args[]) {
 
@@ -95,7 +95,7 @@ public class InvertedMatrixGraph<T> {
 				values.add(String.valueOf(i));
 
 			init = (new Date()).getTime();
-			RandomGraph rn = new RandomGraph(4,100);
+			RandomGraph rn = new RandomGraph(5, 15);
 			interval = (new Date()).getTime() - init;
 			System.out.println("Tiempo en crear grafo: " + interval);
 
@@ -122,6 +122,8 @@ public class InvertedMatrixGraph<T> {
 
 			System.out.println("Coloreo minimo: ");
 			System.out.println(matrix.getMinimalColoring());
+
+			GraphExporter.exportGraph("random_test.dot", rn);
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -178,7 +180,7 @@ public class InvertedMatrixGraph<T> {
 
 		for (int i = index + 1; i < vertexCount; i++) {
 			BitRow next = actual.and(rows.get(i));
-			// System.out.println(next);
+			System.out.println(next);
 
 			if (next.isConsistent()) {
 				// If next ramification is the last one, then add this eq. class
@@ -215,9 +217,11 @@ public class InvertedMatrixGraph<T> {
 			}
 		}
 
+		System.out.println(possible);
+
 	}
 
-	public List<List<Integer>> getMinimalColoring() {
+	public List<List<T>> getMinimalColoring() {
 		return minimal;
 	}
 
@@ -245,7 +249,15 @@ public class InvertedMatrixGraph<T> {
 				min = combination;
 		}
 
-		minimal = min;
+		// Get the nodes, and now map the indices of DFS to the vertices
+		List<T> nodes = graph.DFS();
+		minimal = new ArrayList<List<T>>();
+
+		for (int i = 0; i < min.size(); i++) {
+			minimal.add(new ArrayList<T>());
+			for (int j = 0; j < min.get(i).size(); j++)
+				minimal.get(i).add(nodes.get(min.get(i).get(j)));
+		}
 	}
 
 	/**
