@@ -241,13 +241,12 @@ public class Graph<V> {
 			color(node, available);
 		}
 		State<V> state = new State<V>(node.info, node.color);
-		tree.addVertex(state);
-		// Si la cantidad de colores disponibles supera
+		//tree.addVertex(state);
+		// Si la cantidad de colores disponibles iguala o supera
 		// la cantidad de colores usados en la mejor solucion
 		// hasta ahora, no sigue por esa posibilidad
 		int usedColors = usedColors();
-		if (usedColors != 0 && available.size() > usedColors) {
-			System.out.println("Hola");
+		if (usedColors != 0 && available.size() >= usedColors) {
 			node.color = -1;
 			available.remove(available.size() - 1);
 			return state;
@@ -259,7 +258,7 @@ public class Graph<V> {
 			if (neighbor.info != null && neighbor.color == -1) {
 				State<V> neighborState = perfectColoring(neighbor, available,
 						tree);
-				tree.addEdge(state, neighborState);
+				//tree.addEdge(state, neighborState);
 			}
 		}
 
