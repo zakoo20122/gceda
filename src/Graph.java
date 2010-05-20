@@ -234,7 +234,8 @@ public class Graph<V> {
 		return tree;
 	}
 
-	private State<V> perfectColoring(Node node, List<Integer> available, Graph<State<V>> tree) {
+	private State<V> perfectColoring(Node node, List<Integer> available,
+			Graph<State<V>> tree) {
 		// Colorea si no es el nodo ficticio
 		if (node.info != null) {
 			color(node, available);
@@ -246,31 +247,60 @@ public class Graph<V> {
 		// hasta ahora, no sigue por esa posibilidad
 		int usedColors = usedColors();
 		if (usedColors != 0 && available.size() > usedColors) {
+			System.out.println("Hola");
 			node.color = -1;
 			available.remove(available.size() - 1);
 			return state;
 		}
 
-		//System.out.println(node.info+": "+node.color);
+		//System.out.println(node.info + ": " + node.color);
 		for (Node neighbor : node.adj) {
 			// Si no es el ficticio y no se coloreo aun
 			if (neighbor.info != null && neighbor.color == -1) {
-				State<V> neighborState = perfectColoring(neighbor, available, tree);
+				State<V> neighborState = perfectColoring(neighbor, available,
+						tree);
 				tree.addEdge(state, neighborState);
 			}
 		}
 
 		usedColors = usedColors();
-		// System.out.print("- used:" + usedColors);
-		// System.out.println("- available:" + available.size());
+		//System.out.print("- used:" + usedColors);
+		//System.out.println("- available:" + available.size());
 
 		// Si coloreo todos los vertices y todavia no habia llegado a una
 		// solucion o llego a una mejor que la que ya existia la reemplaza
-		if (usedColors == 0 || available.size() < usedColors) {
+		if (usedColors == 0
+				|| (hasAllColored() && available.size() < usedColors)) {
 			backUp();
 		}
+		int color = node.color;
 		node.color = -1;
+		updateAvailable(color, available);
 		return state;
+	}
+
+	/*
+	 * Verifica si el color que va a ser descoloreado no se usa mas y en ese
+	 * caso lo saca de available
+	 */
+	public void updateAvailable(int color, List<Integer> available) {
+		for (Node node : getNodes()) {
+			if (node.info != null && node.color == color)
+				return;
+		}
+		if(available.size() != 1)
+			available.remove((Object) color);
+	}
+
+	
+	/*
+	 * Verifica si coloreo a todos los nodos
+	 */
+	public boolean hasAllColored() {
+		for (Node node : getNodes())
+			if (node.info != null && node.color == -1)
+				return false;
+		return true;
 	}
 
 	/*
