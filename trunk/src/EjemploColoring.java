@@ -7,7 +7,7 @@ public class EjemploColoring {
 
 	public static void main(String args[]) throws IOException{
 		List<String> values = new ArrayList<String>();
-		for (int i = 0; i < 30; i++)
+		for (int i = 0; i < 9; i++)
 			values.add(String.valueOf(Character.toChars(65+i)));
 
 		
@@ -17,6 +17,9 @@ public class EjemploColoring {
 		System.out.println(System.currentTimeMillis()-time);
 		g.printColors();
 		GraphExporter.exportGraph("asdasdasd.dot", g);
+		System.out.println("");
+		for(String s: g.DFS())
+			System.out.println(s + ": " + g.getColor(s));
 		//GraphExporter.exportGraph("tree.dot", tree);
 	}
 }

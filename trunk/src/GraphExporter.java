@@ -19,7 +19,7 @@ public class GraphExporter {
 			output.write("graph G { ");
 			output.newLine();
 			output.write("graph [splines = true] "
-					+ "node [height=0.4 shape=circle]");
+					+ "node [height=0.4 shape=circle style=filled]");
 			output.newLine();
 
 			List<T> nodes = graph.DFS();
@@ -44,6 +44,14 @@ public class GraphExporter {
 			 */
 			Set<Entry<T, List<T>>> entries = outGraph.entrySet();
 
+			// First declare nodes and its colors
+			for (Entry<T, List<T>> entry : entries) {
+				String line = entry.getKey() + " [ color= "
+						+ getColorName(graph.getColor(entry.getKey())) + "] ;";
+				output.write(line);
+				output.newLine();
+			}
+
 			for (Entry<T, List<T>> entry : entries) {
 				for (T neighbor : entry.getValue()) {
 					String line = "";
@@ -60,5 +68,47 @@ public class GraphExporter {
 				output.close();
 			}
 		}
+	}
+
+	private static String getColorName(int color) {
+		String out = "";
+
+		switch (color) {
+		case 0:
+			out = "azure4";
+			break;
+		case 1:
+			out = "crimson";
+			break;
+		case 2:
+			out = "pink";
+			break;
+		case 3:
+			out = "navyblue";
+			break;
+		case 4:
+			out = "limegreen";
+			break;
+		case 5:
+			out = "sienna";
+			break;
+		case 6:
+			out = "indigo";
+			break;
+		case 7:
+			out = "darkorange";
+			break;
+		case 8:
+			out = "gold";
+			break;
+		case 9:
+			out = "darkturquoise";
+			break;
+		default:
+			out = "white";
+			break;
+
+		}
+		return out;
 	}
 }
