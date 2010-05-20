@@ -7,6 +7,8 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
+import org.w3c.dom.NodeList;
+
 public class Graph<V> {
 
 	private class Node {
@@ -241,7 +243,7 @@ public class Graph<V> {
 			color(node, available);
 		}
 		State<V> state = new State<V>(node.info, node.color);
-		//tree.addVertex(state);
+		// tree.addVertex(state);
 		// Si la cantidad de colores disponibles iguala o supera
 		// la cantidad de colores usados en la mejor solucion
 		// hasta ahora, no sigue por esa posibilidad
@@ -252,19 +254,19 @@ public class Graph<V> {
 			return state;
 		}
 
-		//System.out.println(node.info + ": " + node.color);
+		// System.out.println(node.info + ": " + node.color);
 		for (Node neighbor : node.adj) {
 			// Si no es el ficticio y no se coloreo aun
 			if (neighbor.info != null && neighbor.color == -1) {
 				State<V> neighborState = perfectColoring(neighbor, available,
 						tree);
-				//tree.addEdge(state, neighborState);
+				// tree.addEdge(state, neighborState);
 			}
 		}
 
 		usedColors = usedColors();
-		//System.out.print("- used:" + usedColors);
-		//System.out.println("- available:" + available.size());
+		// System.out.print("- used:" + usedColors);
+		// System.out.println("- available:" + available.size());
 
 		// Si coloreo todos los vertices y todavia no habia llegado a una
 		// solucion o llego a una mejor que la que ya existia la reemplaza
@@ -287,11 +289,10 @@ public class Graph<V> {
 			if (node.info != null && node.color == color)
 				return;
 		}
-		if(available.size() != 1)
+		if (available.size() != 1)
 			available.remove((Object) color);
 	}
 
-	
 	/*
 	 * Verifica si coloreo a todos los nodos
 	 */
@@ -346,6 +347,12 @@ public class Graph<V> {
 				i++;
 			}
 		}
+	}
+
+	public int getColor(V info) {
+		if (nodes.containsKey(info))
+			return nodes.get(info).color;
+		return -1;
 	}
 
 	// PARA TESTEAR
