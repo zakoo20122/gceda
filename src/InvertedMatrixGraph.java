@@ -90,40 +90,35 @@ public class InvertedMatrixGraph<T> {
 			long init, interval;
 
 			List<String> values = new ArrayList<String>();
-			int size = 800;
+			int size = 9;
 			for (int i = 0; i < size; i++)
 				values.add(String.valueOf(i));
 
 			init = (new Date()).getTime();
-			RandomGraph rn = new RandomGraph(10, 50);
-			interval = (new Date()).getTime() - init;
-			System.out.println("Tiempo en crear grafo: " + interval);
+			RandomGraph rn;
+			InvertedMatrixGraph<String> matrix;
 
-			init = (new Date()).getTime();
-			InvertedMatrixGraph<String> matrix = new InvertedMatrixGraph<String>(
-					rn);
+			interval = 0;
+			double qty = 1;
+			for (int i = 0; i < qty; i++) {
+				init = (new Date()).getTime();
+				rn = new RandomGraph(20, 350);
+				matrix = new InvertedMatrixGraph<String>(rn);
+				matrix.getMinimalColoring();
+				interval += (new Date()).getTime() - init;
+			}
+			System.out.println("Cantidad de grafos: " + qty);
+			System.out.println("Tiempo promedio en buscar el minimo coloreo: "
+					+ interval / (1000 * qty) + " segundos.");
+			System.out.println("Tiempo total: " + interval / 1000.0
+					+ " segundos. ");
 
-			interval = (new Date()).getTime() - init;
-			System.out.println("Tiempo en crear matriz: " + interval);
-
-			init = (new Date()).getTime();
-			matrix.getEquivalenceClasses();
-
-			interval = (new Date()).getTime() - init;
-			System.out.println("Tiempo en buscar clases de equivalencia: "
-					+ interval);
-
-			init = (new Date()).getTime();
-			matrix.searchMinimalColoring();
-
-			interval = (new Date()).getTime() - init;
-			System.out.println("Tiempo en buscar el minimo coloreo: "
-					+ interval);
-
-			System.out.println("Coloreo minimo: ");
-			System.out.println(matrix.getMinimalColoring());
-
-			GraphExporter.exportGraph("random_test.dot", rn);
+			/*
+			 * matrix = new InvertedMatrixGraph<String>(new Cn<String>(values));
+			 * init = (new Date()).getTime(); matrix.getMinimalColoring();
+			 * interval = (new Date()).getTime() - init;
+			 * System.out.println(interval);
+			 */
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -183,11 +178,10 @@ public class InvertedMatrixGraph<T> {
 			// System.out.println(next);
 
 			if (next.isConsistent()) {
-				// If next ramification is the last one, then add this eq. class
-				if (getRamification(next, i, group)) {
-					// System.out.println("LASSST" + next);
-					group.add(next.getInfo());
-				}
+				// Go to next ramification
+				getRamification(next, i, group);
+				// Add this possible class
+				group.add(next.getInfo());
 				// But this ramification isn't the last, so return false
 				last = false;
 			}
@@ -199,27 +193,22 @@ public class InvertedMatrixGraph<T> {
 	public void getEquivalenceClasses() {
 
 		// Create a group for the i-th vertex, then search for equivalence
-		// classes
+		// classes. Add each vertex as its own equivalence class.
 		for (int i = 0; i < vertexCount; i++) {
 			possible.add(new ArrayList<List<Integer>>());
+			possible.get(i).add(new ArrayList<Integer>());
+			possible.get(i).get(0).add(i);
 			getRamification(rows.get(i), i, possible.get(i));
 		}
-
-		/*
-		 * If there are empty groups, then add independent colors to those
-		 * vertices, because they may be isolated colors (probably a clique).
-		 */
-		for (int i = 0; i < vertexCount; i++) {
-			if (possible.get(i).isEmpty()) {
-				List<Integer> uniqueColor = new ArrayList<Integer>();
-				uniqueColor.add(i);
-				possible.get(i).add(uniqueColor);
-			}
-		}
-
 	}
 
 	public List<List<T>> getMinimalColoring() {
+		this.getEquivalenceClasses();
+		this.searchMinimalColoring();
+
+		for (T t : graph.DFS())
+			if (graph.hasNeighborColor(t))
+				System.out.println("ANDA MAL");
 		return minimal;
 	}
 
