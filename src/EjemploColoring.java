@@ -7,17 +7,16 @@ public class EjemploColoring {
 
 	public static void main(String args[]) throws IOException{
 		List<String> values = new ArrayList<String>();
-		for (int i = 0; i < 7; i++)
+		for (int i = 0; i < 30; i++)
 			values.add(String.valueOf(Character.toChars(65+i)));
 
 		
-		Cn g = new Cn(values);
-		System.out.println(g.isConnected());
+		Graph<String> g = new Kn<String>(values);
 		long time = System.currentTimeMillis();
-		Graph<State<String>> tree = g.perfectColoring();
+		g.perfectColoring();
 		System.out.println(System.currentTimeMillis()-time);
 		g.printColors();
 		GraphExporter.exportGraph("asdasdasd.dot", g);
-		GraphExporter.exportGraph("tree.dot", tree);
+		//GraphExporter.exportGraph("tree.dot", tree);
 	}
 }
