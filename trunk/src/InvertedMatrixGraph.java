@@ -1,4 +1,3 @@
-import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -96,13 +95,13 @@ public class InvertedMatrixGraph<T> {
 				values.add(String.valueOf(i));
 
 			init = (new Date()).getTime();
-			Kn<String> kn = new Kn<String>(values);
+			RandomGraph rn = new RandomGraph(4,100);
 			interval = (new Date()).getTime() - init;
 			System.out.println("Tiempo en crear grafo: " + interval);
 
 			init = (new Date()).getTime();
 			InvertedMatrixGraph<String> matrix = new InvertedMatrixGraph<String>(
-					kn);
+					rn);
 
 			interval = (new Date()).getTime() - init;
 			System.out.println("Tiempo en crear matriz: " + interval);
@@ -249,7 +248,7 @@ public class InvertedMatrixGraph<T> {
 		minimal = min;
 	}
 
-	/*
+	/**
 	 * Note that as the algorithm iterates over each group, it is guaranteed
 	 * that any further group won't contain the characteristic vertex of that
 	 * group. That is, the last group which may contain the I-eth vertex is the
