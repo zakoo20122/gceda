@@ -355,6 +355,10 @@ public class Graph<V> {
 		return -1;
 	}
 
+	public void setColor(V info, int color) {
+		nodes.get(info).color = color;
+	}
+
 	// PARA TESTEAR
 	public void printColors() {
 		for (Node node : getNodes())
