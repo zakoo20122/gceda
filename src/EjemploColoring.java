@@ -7,19 +7,18 @@ public class EjemploColoring {
 
 	public static void main(String args[]) throws IOException{
 		List<String> values = new ArrayList<String>();
-		for (int i = 0; i < 9; i++)
+		for (int i = 0; i < 4; i++)
 			values.add(String.valueOf(Character.toChars(65+i)));
 
 		
-		Graph<String> g = new Kn<String>(values);
+		Graph<String> g = new RandomGraph(9,10);
+		GraphExporter.exportGraph("descoloreado.dot", g);
 		long time = System.currentTimeMillis();
 		g.perfectColoring();
 		System.out.println(System.currentTimeMillis()-time);
 		g.printColors();
 		GraphExporter.exportGraph("asdasdasd.dot", g);
 		System.out.println("");
-		for(String s: g.DFS())
-			System.out.println(s + ": " + g.getColor(s));
 		//GraphExporter.exportGraph("tree.dot", tree);
 	}
 }
