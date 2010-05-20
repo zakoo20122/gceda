@@ -95,7 +95,7 @@ public class InvertedMatrixGraph<T> {
 				values.add(String.valueOf(i));
 
 			init = (new Date()).getTime();
-			RandomGraph rn = new RandomGraph(5, 15);
+			RandomGraph rn = new RandomGraph(10, 50);
 			interval = (new Date()).getTime() - init;
 			System.out.println("Tiempo en crear grafo: " + interval);
 
@@ -180,7 +180,7 @@ public class InvertedMatrixGraph<T> {
 
 		for (int i = index + 1; i < vertexCount; i++) {
 			BitRow next = actual.and(rows.get(i));
-			System.out.println(next);
+			// System.out.println(next);
 
 			if (next.isConsistent()) {
 				// If next ramification is the last one, then add this eq. class
@@ -216,8 +216,6 @@ public class InvertedMatrixGraph<T> {
 				possible.get(i).add(uniqueColor);
 			}
 		}
-
-		System.out.println(possible);
 
 	}
 
@@ -257,6 +255,13 @@ public class InvertedMatrixGraph<T> {
 			minimal.add(new ArrayList<T>());
 			for (int j = 0; j < min.get(i).size(); j++)
 				minimal.get(i).add(nodes.get(min.get(i).get(j)));
+		}
+
+		int color = 0;
+		for (List<T> colorClass : minimal) {
+			for (T info : colorClass)
+				graph.setColor(info, color);
+			color++;
 		}
 	}
 
