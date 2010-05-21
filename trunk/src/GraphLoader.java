@@ -8,6 +8,9 @@ public class GraphLoader {
 	public static Graph<String> loadGraph(String fileName) throws IOException {
 		BufferedReader input = null;
 		try {
+			String extention = fileName.substring(fileName.indexOf(".")+1);
+			if(!extention.equals("graph"))
+				return null;				
 			File file = new File(fileName);
 			input = new BufferedReader(new FileReader(file));
 			String line;
