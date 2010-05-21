@@ -237,7 +237,6 @@ public class Graph<V> {
 		available.add(0);
 		perfectColoring(nodes.get(null), available, tree);
 		removeVertex(null);
-		System.out.println(colored);
 		for (State<V> state : colored) {
 			nodes.get(state.getInfo()).color = state.getColor();
 		}
@@ -252,34 +251,36 @@ public class Graph<V> {
 		}
 		State<V> state = new State<V>(node.info, node.color);
 		// tree.addVertex(state);
-		// Si la cantidad de colores disponibles iguala o supera
-		// la cantidad de colores usados en la mejor solucion
-		// hasta ahora, no sigue por esa posibilidad
-		if (usedColors != 0 && available.size() >= usedColors) {
-			node.color = -1;
-			available.remove(available.size() - 1);
-			return state;
-		}
 
-		 System.out.println(node.info + ": " + node.color);
-		for (Node neighbor : node.adj) {
+		// System.out.println(node.info + ": " + node.color);
+		for (Node other : getNodes()) {
+			// Si la cantidad de colores disponibles iguala o supera
+			// la cantidad de colores usados en la mejor solucion
+			// hasta ahora, no sigue verificando ese nodo
+			if(usedColors != 0 && available.size() > usedColors)
+				System.out.println("ERROR");
+			if (usedColors != 0 && available.size() == usedColors) {
+				int color = node.color;
+				node.color = -1;
+				updateAvailable(color, available);
+				return state;
+			}
 			// Si no es el ficticio y no se coloreo aun
-			if (neighbor.info != null && neighbor.color == -1) {
-				State<V> neighborState = perfectColoring(neighbor, available,
+			else if (other.info != null && other.color == -1) {
+				State<V> neighborState = perfectColoring(other, available,
 						tree);
 				// tree.addEdge(state, neighborState);
 			}
 		}
 
-		 System.out.print("- used:" + usedColors);
-		 System.out.println("- available:" + available.size());
+		// System.out.print("- used:" + usedColors);
+		// System.out.println("- available:" + available.size());
 
 		// Si coloreo todos los vertices y todavia no habia llegado a una
 		// solucion o llego a una mejor que la que ya existia la reemplaza
 		if (hasAllColored()
 				&& (usedColors == 0 || available.size() < usedColors)) {
 			backUp();
-			System.out.println("COLORED: " + colored);
 		}
 		int color = node.color;
 		node.color = -1;
@@ -339,8 +340,9 @@ public class Graph<V> {
 		} else {
 			int i = 0;
 			while (node.color == -1) {
-			//	System.out.println("A: " + available);
-			//	System.out.println("D: " + disabled);
+				//System.out.println("A: " + available);
+				//System.out.println("Pintando: "+node.info);
+				//System.out.println("D: " + disabled);
 				int newColor = available.get(i);
 				if (!disabled.contains(newColor)) {
 					node.color = newColor;
@@ -358,12 +360,6 @@ public class Graph<V> {
 
 	public void setColor(V info, int color) {
 		nodes.get(info).color = color;
-	}
-
-	// PARA TESTEAR
-	public void printColors() {
-		for (Node node : getNodes())
-			System.out.println(node.info + ": " + node.color);
 	}
 
 	public boolean hasNeighborColor(V info) {

@@ -16,9 +16,7 @@ public class EjemploColoring {
 		long time = System.currentTimeMillis();
 		g.perfectColoring();
 		System.out.println(System.currentTimeMillis()-time);
-		g.printColors();
 		GraphExporter.exportGraph("asdasdasd.dot", g);
-		System.out.println("");
 		//GraphExporter.exportGraph("tree.dot", tree);
 	}
 }
