@@ -222,7 +222,7 @@ public class InvertedMatrixGraph<T> {
 		this.searchMinimalColoring();
 
 		for (T t : graph.DFS())
-			if (graph.neighborColor(t) != null)
+			if (graph.neighborsColor(t).size() != 0)
 				System.out.println("ANDA MAL");
 		return minimal;
 	}
