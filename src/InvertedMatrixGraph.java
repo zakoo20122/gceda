@@ -90,34 +90,49 @@ public class InvertedMatrixGraph<T> {
 			long init, interval;
 
 			List<String> values = new ArrayList<String>();
-			int size = 9;
+			int size = 10;
 			for (int i = 0; i < size; i++)
 				values.add(String.valueOf(i));
 
 			init = (new Date()).getTime();
-			RandomGraph rn;
+			Kn<String> rn1;
+			Kn<String> rn2;
 			InvertedMatrixGraph<String> matrix;
-
-			interval = 0;
-			double qty = 1;
-			for (int i = 0; i < qty; i++) {
-				init = (new Date()).getTime();
-				rn = new RandomGraph(20, 350);
-				matrix = new InvertedMatrixGraph<String>(rn);
-				matrix.getMinimalColoring();
-				interval += (new Date()).getTime() - init;
-			}
-			System.out.println("Cantidad de grafos: " + qty);
-			System.out.println("Tiempo promedio en buscar el minimo coloreo: "
-					+ interval / (1000 * qty) + " segundos.");
-			System.out.println("Tiempo total: " + interval / 1000.0
-					+ " segundos. ");
-
 			/*
-			 * matrix = new InvertedMatrixGraph<String>(new Cn<String>(values));
-			 * init = (new Date()).getTime(); matrix.getMinimalColoring();
-			 * interval = (new Date()).getTime() - init;
-			 * System.out.println(interval);
+			 * interval = 0; double qty = 1; for (int i = 0; i < qty; i++) {
+			 * init = (new Date()).getTime(); rn = new RandomGraph(15, 50);
+			 * matrix = new InvertedMatrixGraph<String>(rn);
+			 * System.out.println(rn.edgeCount());
+			 * System.out.println("Numero cromático: " +
+			 * matrix.getMinimalColoring().size()); rn.perfectColoring(); for
+			 * (String t : rn.DFS()) System.out.println(rn.getColor(t));
+			 * interval += (new Date()).getTime() - init; }
+			 */
+
+			rn1 = new Kn<String>(values);
+			rn2 = new Kn<String>(values);
+			matrix = new InvertedMatrixGraph<String>(rn1);
+			init = (new Date()).getTime();
+			System.out.println("Numero cromático: "
+					+ matrix.getMinimalColoring().size());
+			System.out.println("Tiempo1: " + ((new Date()).getTime() - init));
+			init = (new Date()).getTime();
+			rn2.perfectColoring();
+			for (String t : rn2.DFS())
+				System.out.println(rn2.getColor(t));
+			System.out.println("Tiempo2: " + ((new Date()).getTime() - init));
+
+			// System.out.println("Cantidad de grafos: " + qty);
+			/*
+			 * System.out.println("Tiempo promedio en buscar el minimo coloreo: "
+			 * + interval / (1000 * qty) + " segundos.");
+			 * System.out.println("Tiempo total: " + interval / 1000.0 +
+			 * " segundos. ");
+			 * 
+			 * /* matrix = new InvertedMatrixGraph<String>(new
+			 * Cn<String>(values)); init = (new Date()).getTime();
+			 * matrix.getMinimalColoring(); interval = (new Date()).getTime() -
+			 * init; System.out.println(interval);
 			 */
 
 		} catch (Exception e) {
