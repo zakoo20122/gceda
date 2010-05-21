@@ -20,7 +20,7 @@ public class RandomGraph extends Graph<String> {
 		}
 
 		// Add edges
-		for (int i = 0; i < edgeCount; i++) {
+		while (edgeCount() < edgeCount || !isConnected()) {
 			int v1;
 			int v2;
 			do {
@@ -28,9 +28,8 @@ public class RandomGraph extends Graph<String> {
 				v2 = (int) (Math.random() * vertexCount);
 			} while (v1 == v2);
 			this.addEdge(String.valueOf(v1), String.valueOf(v2));
-			if (i == edgeCount - 1 && !isConnected())
-				i--;
 		}
 
+		System.out.println(edgeCount());
 	}
 }
