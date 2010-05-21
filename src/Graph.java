@@ -239,13 +239,17 @@ public class Graph<V> {
 		nodes.get(info).color = color;
 	}
 
-	public boolean hasNeighborColor(V info) {
+	/*
+	 * Retorna el valor de un nodo vecino si tiene el mismo color o null en caso
+	 * que no exista
+	 */
+	public V neighborColor(V info) {
 		Node node = nodes.get(info);
 		for (Node neighbor : node.adj) {
 			if (node.color == neighbor.color)
-				return true;
+				return neighbor.info;
 		}
-		return false;
+		return null;
 	}
 
 	public Graph<State<V>> perfectColoring() {
@@ -357,14 +361,14 @@ public class Graph<V> {
 	 */
 	private void backUp() {
 		colored.clear();
-		Set<Integer> aux = new HashSet<Integer>();
+		Set<Integer> distinctColors = new HashSet<Integer>();
 		for (Node node : getNodes()) {
 			if (node.info != null) {
 				colored.add(new State<V>(node.info, node.color));
-				aux.add(node.color);
+				distinctColors.add(node.color);
 			}
 		}
-		usedColors = aux.size();
+		usedColors = distinctColors.size();
 	}
 
 	/*
