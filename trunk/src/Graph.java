@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Queue;
 import java.util.Set;
 
-import org.w3c.dom.NodeList;
-
 public class Graph<V> {
 
 	private class Node {
@@ -250,7 +248,7 @@ public class Graph<V> {
 			color(node, available);
 		}
 		State<V> state = new State<V>(node.info, node.color);
-		// tree.addVertex(state);
+		//tree.addVertex(state);
 
 		// System.out.println(node.info + ": " + node.color);
 		for (Node other : getNodes()) {
@@ -269,7 +267,7 @@ public class Graph<V> {
 			else if (other.info != null && other.color == -1) {
 				State<V> neighborState = perfectColoring(other, available,
 						tree);
-				// tree.addEdge(state, neighborState);
+				//tree.addEdge(state, neighborState);
 			}
 		}
 
