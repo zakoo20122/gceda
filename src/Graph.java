@@ -240,16 +240,17 @@ public class Graph<V> {
 	}
 
 	/*
-	 * Retorna el valor de un nodo vecino si tiene el mismo color o null en caso
-	 * que no exista
+	 * Retorna el valor de los nodos vecinos si tiene el mismo color o null en caso
+	 * que no exista ninguno
 	 */
-	public V neighborColor(V info) {
+	public List<V> neighborsColor(V info) {
+		List<V> ans = new ArrayList<V>();
 		Node node = nodes.get(info);
 		for (Node neighbor : node.adj) {
 			if (node.color == neighbor.color)
-				return neighbor.info;
+				ans.add(neighbor.info);
 		}
-		return null;
+		return ans;
 	}
 
 	public Graph<State<V>> perfectColoring() {
