@@ -51,6 +51,11 @@ public class Graph<V> {
 	private HashMap<V, Node> nodes;
 	private List<State<V>> colored;
 	/*
+	 * Contiene en cada elemento la cantidad de nodos coloreados con el color
+	 * i-esimo
+	 */
+	private List<Integer> quantColor;
+	/*
 	 * Contiene la cantidad de colores distintos usados en el grafo, 0 en el
 	 * caso de que el mismo no este completamente coloreado o si el grafo esta
 	 * vacio
@@ -61,6 +66,7 @@ public class Graph<V> {
 		this.nodes = new HashMap<V, Node>();
 		this.colored = new ArrayList<State<V>>();
 		this.usedColors = 0;
+		this.quantColor = new ArrayList<Integer>();
 	}
 
 	public boolean isEmpty() {
@@ -223,6 +229,25 @@ public class Graph<V> {
 		return true;
 	}
 
+	public int getColor(V info) {
+		if (nodes.containsKey(info))
+			return nodes.get(info).color;
+		return -1;
+	}
+
+	public void setColor(V info, int color) {
+		nodes.get(info).color = color;
+	}
+
+	public boolean hasNeighborColor(V info) {
+		Node node = nodes.get(info);
+		for (Node neighbor : node.adj) {
+			if (node.color == neighbor.color)
+				return true;
+		}
+		return false;
+	}
+	
 	public Graph<State<V>> perfectColoring() {
 		// Agrego un nodo ficticio unido a todos los demas
 		addVertex(null);
@@ -244,30 +269,25 @@ public class Graph<V> {
 	private State<V> perfectColoring(Node node, List<Integer> available,
 			Graph<State<V>> tree) {
 		// Colorea si no es el nodo ficticio
-		if (node.info != null) {
+		if (node.info != null)
 			color(node, available);
-		}
+		
 		State<V> state = new State<V>(node.info, node.color);
-		//tree.addVertex(state);
+		// tree.addVertex(state);
 
 		// System.out.println(node.info + ": " + node.color);
 		for (Node other : getNodes()) {
 			// Si la cantidad de colores disponibles iguala o supera
 			// la cantidad de colores usados en la mejor solucion
 			// hasta ahora, no sigue verificando ese nodo
-			if(usedColors != 0 && available.size() > usedColors)
-				System.out.println("ERROR");
 			if (usedColors != 0 && available.size() == usedColors) {
-				int color = node.color;
-				node.color = -1;
-				updateAvailable(color, available);
+				discolor(node, available);
 				return state;
 			}
 			// Si no es el ficticio y no se coloreo aun
 			else if (other.info != null && other.color == -1) {
-				State<V> neighborState = perfectColoring(other, available,
-						tree);
-				//tree.addEdge(state, neighborState);
+				State<V> neighborState = perfectColoring(other, available, tree);
+				// tree.addEdge(state, neighborState);
 			}
 		}
 
@@ -280,22 +300,25 @@ public class Graph<V> {
 				&& (usedColors == 0 || available.size() < usedColors)) {
 			backUp();
 		}
-		int color = node.color;
-		node.color = -1;
-		updateAvailable(color, available);
+		if(node.info != null)
+			discolor(node, available);
 		return state;
 	}
 
+	
+	private void discolor(Node node, List<Integer> available){
+		int color = node.color;
+		node.color = -1;
+		quantColor.set(color, quantColor.get(color)-1);
+		updateAvailable(color, available);
+	}
+	
 	/*
-	 * Verifica si el color que va a ser descoloreado no se usa mas y en ese
-	 * caso lo saca de available
+	 * Verifica si el color del nodo que sera descoloreado no se usa mas y en
+	 * ese caso lo saca de available
 	 */
 	public void updateAvailable(int color, List<Integer> available) {
-		for (Node node : getNodes()) {
-			if (node.info != null && node.color == color)
-				return;
-		}
-		if (available.size() != 1)
+		if (available.size() != 1 && quantColor.get(color) == 0)
 			available.remove((Object) color);
 	}
 
@@ -331,41 +354,23 @@ public class Graph<V> {
 				disabled.add(neighbor.color);
 			}
 		}
+		int newColor = 0;
 		if (disabled.size() == available.size()) {
-			int newColor = available.get(available.size() - 1) + 1;
+			newColor = available.get(available.size() - 1) + 1;
 			available.add(newColor);
 			node.color = newColor;
 		} else {
 			int i = 0;
 			while (node.color == -1) {
-				//System.out.println("A: " + available);
-				//System.out.println("Pintando: "+node.info);
-				//System.out.println("D: " + disabled);
-				int newColor = available.get(i);
+				newColor = available.get(i);
 				if (!disabled.contains(newColor)) {
 					node.color = newColor;
 				}
 				i++;
 			}
 		}
-	}
-
-	public int getColor(V info) {
-		if (nodes.containsKey(info))
-			return nodes.get(info).color;
-		return -1;
-	}
-
-	public void setColor(V info, int color) {
-		nodes.get(info).color = color;
-	}
-
-	public boolean hasNeighborColor(V info) {
-		Node node = nodes.get(info);
-		for (Node neighbor : node.adj) {
-			if (node.color == neighbor.color)
-				return true;
-		}
-		return false;
+		if(newColor >= quantColor.size())
+			quantColor.add(0);
+		quantColor.set(newColor, quantColor.get(newColor) + 1);
 	}
 }
