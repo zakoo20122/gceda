@@ -49,7 +49,7 @@ public class State<V> {
 	@Override
 	public String toString() {
 		if(info == null )
-			return "null";
+			return "Start";
 		return info.toString() + color + num;
 	}
 }

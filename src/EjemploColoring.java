@@ -11,10 +11,9 @@ public class EjemploColoring {
 			values.add(String.valueOf(Character.toChars(65+i)));
 
 		
-		Graph<String> g = new RandomGraph(9,10);
-		GraphExporter.exportGraph("descoloreado.dot", g);
+		Graph<String> g = new Cn<String>(values);
 		long time = System.currentTimeMillis();
-		g.perfectColoring();
+		Graph<State<String>> tree = g.perfectColoring();
 		System.out.println(System.currentTimeMillis()-time);
 		GraphExporter.exportGraph("asdasdasd.dot", g);
 		//GraphExporter.exportGraph("tree.dot", tree);
