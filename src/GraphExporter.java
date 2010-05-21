@@ -13,7 +13,7 @@ public class GraphExporter {
 			throws IOException {
 		BufferedWriter output = null;
 		try {
-			File file = new File(fileName);
+			File file = new File(fileName+".dot");
 			output = new BufferedWriter(new FileWriter(file));
 
 			output.write("graph G { ");
@@ -110,5 +110,25 @@ public class GraphExporter {
 
 		}
 		return out;
+	}
+	
+	public static <T> void exportColors(String fileName, Graph<T> graph) throws IOException {
+		BufferedWriter output = null;
+		try {
+			File file = new File(fileName+".color");
+			output = new BufferedWriter(new FileWriter(file));
+
+			List<T> nodes = graph.DFS();
+			for(T node: nodes){
+				int color = graph.getColor(node);
+				output.write(node+"="+color);
+				output.newLine();
+			}
+			output.write("}");
+		} finally {
+			if (output != null) {
+				output.close();
+			}
+		}
 	}
 }

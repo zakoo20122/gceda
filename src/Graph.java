@@ -247,7 +247,7 @@ public class Graph<V> {
 		}
 		return false;
 	}
-	
+
 	public Graph<State<V>> perfectColoring() {
 		// Agrego un nodo ficticio unido a todos los demas
 		addVertex(null);
@@ -271,7 +271,7 @@ public class Graph<V> {
 		// Colorea si no es el nodo ficticio
 		if (node.info != null)
 			color(node, available);
-		
+
 		State<V> state = new State<V>(node.info, node.color);
 		// tree.addVertex(state);
 
@@ -300,51 +300,22 @@ public class Graph<V> {
 				&& (usedColors == 0 || available.size() < usedColors)) {
 			backUp();
 		}
-		if(node.info != null)
+		if (node.info != null)
 			discolor(node, available);
 		return state;
-	}
-
-	
-	private void discolor(Node node, List<Integer> available){
-		int color = node.color;
-		node.color = -1;
-		quantColor.set(color, quantColor.get(color)-1);
-		updateAvailable(color, available);
-	}
-	
-	/*
-	 * Verifica si el color del nodo que sera descoloreado no se usa mas y en
-	 * ese caso lo saca de available
-	 */
-	public void updateAvailable(int color, List<Integer> available) {
-		if (available.size() != 1 && quantColor.get(color) == 0)
-			available.remove((Object) color);
 	}
 
 	/*
 	 * Verifica si coloreo a todos los nodos
 	 */
-	public boolean hasAllColored() {
-		for (Node node : getNodes())
-			if (node.info != null && node.color == -1)
-				return false;
-		return true;
-	}
-
-	/*
-	 * Contiene por cada nodo, su informacion y su color
-	 */
-	private void backUp() {
-		colored.clear();
-		Set<Integer> aux = new HashSet<Integer>();
-		for (Node node : getNodes()) {
-			if (node.info != null) {
-				colored.add(new State<V>(node.info, node.color));
-				aux.add(node.color);
-			}
+	private boolean hasAllColored() {
+		// Para omitir al ficticio
+		int vertexCount = vertexCount() - 1;
+		int acum = 0;
+		for (int color : quantColor) {
+			acum += color;
 		}
-		usedColors = aux.size();
+		return acum == vertexCount;
 	}
 
 	private void color(Node node, List<Integer> available) {
@@ -369,8 +340,39 @@ public class Graph<V> {
 				i++;
 			}
 		}
-		if(newColor >= quantColor.size())
+		if (newColor >= quantColor.size())
 			quantColor.add(0);
 		quantColor.set(newColor, quantColor.get(newColor) + 1);
+	}
+
+	private void discolor(Node node, List<Integer> available) {
+		int color = node.color;
+		node.color = -1;
+		quantColor.set(color, quantColor.get(color) - 1);
+		updateAvailable(color, available);
+	}
+
+	/*
+	 * Contiene por cada nodo, su informacion y su color
+	 */
+	private void backUp() {
+		colored.clear();
+		Set<Integer> aux = new HashSet<Integer>();
+		for (Node node : getNodes()) {
+			if (node.info != null) {
+				colored.add(new State<V>(node.info, node.color));
+				aux.add(node.color);
+			}
+		}
+		usedColors = aux.size();
+	}
+
+	/*
+	 * Verifica si el color del nodo que sera descoloreado no se usa mas y en
+	 * ese caso lo saca de available
+	 */
+	private void updateAvailable(int color, List<Integer> available) {
+		if (available.size() != 1 && quantColor.get(color) == 0)
+			available.remove((Object) color);
 	}
 }

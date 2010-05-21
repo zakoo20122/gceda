@@ -29,7 +29,5 @@ public class RandomGraph extends Graph<String> {
 			} while (v1 == v2);
 			this.addEdge(String.valueOf(v1), String.valueOf(v2));
 		}
-
-		System.out.println(edgeCount());
 	}
 }

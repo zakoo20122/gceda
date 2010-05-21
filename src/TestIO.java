@@ -20,12 +20,12 @@ public class TestIO {
 			RandomGraph rn = new RandomGraph(100, 300);
 			HararyGraph hn = new HararyGraph(35, 50);
 
-			GraphExporter.exportGraph("outRandom.dot", rn);
-			GraphExporter.exportGraph("outKn.dot", kn);
-			GraphExporter.exportGraph("outCicle.dot", cn);
-			GraphExporter.exportGraph("outWheel.dot", wn);
-			GraphExporter.exportGraph("out.dot", graph);
-			GraphExporter.exportGraph("outHarary.dot", hn);
+			GraphExporter.exportGraph("outRandom", rn);
+			GraphExporter.exportGraph("outKn", kn);
+			GraphExporter.exportGraph("outCicle", cn);
+			GraphExporter.exportGraph("outWheel", wn);
+			GraphExporter.exportGraph("out", graph);
+			GraphExporter.exportGraph("outHarary", hn);
 
 		} catch (IOException e) {
 			System.out.println(e);
