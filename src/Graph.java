@@ -238,6 +238,7 @@ public class Graph<V> {
 	}
 
 	public void exactColoring() {
+		clearColors();
 		ExactColoring<V> ec = new ExactColoring<V>(this);
 		ec.perfectColoring();
 		this.chromaticNumber = ec.getKNumber();
@@ -247,7 +248,13 @@ public class Graph<V> {
 		return chromaticNumber;
 	}
 
+	public void clearColors() {
+		for (V v : DFS())
+			this.setColor(v, -1);
+	}
+
 	public void tabuSearch() {
+		clearColors();
 		TabuSearch<V> ts = new TabuSearch<V>(this);
 		ts.coloring();
 	}
