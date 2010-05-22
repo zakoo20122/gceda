@@ -44,7 +44,7 @@ public class ExactColoring<T> extends Coloring<T> {
 
 		TreeState<T> state = new TreeState<T>(info, graph.getColor(info));
 		//tree.addVertex(state);
-
+		System.out.println(quantColor);
 		// System.out.println(node.info + ": " + node.color);
 		for (T other : graph.DFS()) {
 			// Si la cantidad de colores disponibles iguala o supera

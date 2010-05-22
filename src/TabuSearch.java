@@ -10,7 +10,7 @@ public class TabuSearch<T> extends Coloring<T> {
 	private static int j = 4;
 
 	public static void main(String[] args) throws IOException {
-		Graph<String> g = new RandomGraph(9, 10);
+		Graph<String> g = new RandomGraph(4, 5);
 		TabuSearch<String> ts = new TabuSearch<String>(g);
 		long time = System.currentTimeMillis();
 		ts.coloring();
@@ -59,6 +59,8 @@ public class TabuSearch<T> extends Coloring<T> {
 		}
 
 		public Set<Solution> neighbors() {
+			System.out.println(quantColor);
+			System.out.println(available);
 			Set<Solution> set = new HashSet<Solution>();
 			int i = 0;
 			for (T info : graph.DFS()) {
@@ -83,6 +85,7 @@ public class TabuSearch<T> extends Coloring<T> {
 		 */
 		private boolean changeColor(T info, Set<State<T>> ans) {
 			int oldColor = graph.getColor(info);
+			discolor(info);
 			if (oldColor == 0)
 				graph.setColor(info, oldColor + 1);
 			else
@@ -93,7 +96,6 @@ public class TabuSearch<T> extends Coloring<T> {
 			for (T next : graph.neighborsColor(info)) {
 				if (ans.contains(new State<T>(next, -1))) {
 					int previousSize = available.size();
-					discolor(info);
 					color(info);
 					/*
 					 * Si tuvo que usar mas colores para colorearlo, remueve el
@@ -117,6 +119,13 @@ public class TabuSearch<T> extends Coloring<T> {
 			for (State<T> state : states) {
 				graph.setColor(state.getInfo(), state.getColor());
 			}
+			System.out.println(quantColor);
+			System.out.println(available);
+			System.out.println("Hola");
+
+			updateLists(states);
+			System.out.println(quantColor);
+			System.out.println(available);
 		}
 
 		// PARA TESTEAR
@@ -141,7 +150,7 @@ public class TabuSearch<T> extends Coloring<T> {
 			for (Solution neighbor : localSolution.neighbors()) {
 				int neighborSolEval = neighbor.evaluate();
 				if (localSolEval > neighborSolEval) {
-					// System.out.println(neighbor);
+					//System.out.println(neighbor);
 					localSolution = neighbor;
 					localSolEval = neighborSolEval;
 					updateLists(localSolution.states);
@@ -175,12 +184,11 @@ public class TabuSearch<T> extends Coloring<T> {
 
 	private void updateLists(Set<State<T>> states) {
 		Set<Integer> aux = new HashSet<Integer>();
-		quantColor.clear();
+		for(int i = 0; i < quantColor.size(); i++)
+			quantColor.set(i, 0);
 		available.clear();
 		for (State<T> state : states) {
 			aux.add(state.getColor());
-			if (state.getColor() >= quantColor.size())
-				quantColor.add(0);
 			quantColor.set(state.getColor(),
 					quantColor.get(state.getColor()) + 1);
 		}
