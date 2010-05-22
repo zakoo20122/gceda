@@ -238,5 +238,14 @@ public class Graph<V> {
 		return ans;
 	}
 
+	public void exactColoring(){
+		ExactColoring<V> ec = new ExactColoring<V>(this);
+		ec.perfectColoring();
+	}
+	
+	public void tabuSearch(){
+		TabuSearch<V> ts = new TabuSearch<V>(this);
+		ts.coloring();
+	}
 	
 }
