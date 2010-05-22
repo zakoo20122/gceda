@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class TabuSearch<T> {
+public class TabuSearch<T> extends Coloring<T>{
 
 	private static int MAX_TRIES = 5;
 	private Graph<T> graph;
@@ -15,7 +15,7 @@ public class TabuSearch<T> {
 		Graph<String> g = new RandomGraph(400, 5000);
 		TabuSearch<String> ts = new TabuSearch<String>(g);
 		long time = System.currentTimeMillis();
-		ts.color();
+		ts.coloring();
 		System.out.println(System.currentTimeMillis() - time);
 		GraphExporter.exportGraph("ts", g);
 	}
@@ -153,7 +153,7 @@ public class TabuSearch<T> {
 		this.graph = graph;
 	}
 
-	public void color() {
+	public void coloring() {
 		memory = new int[graph.vertexCount()];
 		Solution localSolution = initialSolution();
 		Solution bestSolution = localSolution;
@@ -187,36 +187,9 @@ public class TabuSearch<T> {
 		Set<State> states = new HashSet<State>();
 		available.add(0);
 		for (T info : graph.DFS()) {
-			nodeColor(info, available);
+			color(info, available);
 			states.add(new State(info, graph.getColor(info)));
 		}
 		return new Solution(states, -1);
-	}
-
-	/*
-	 * VERIFICAR SI ES MEJOR LLAMAR A ESTE DESDE GRAPH PARA EL PERFECTCOLORING
-	 */
-	private void nodeColor(T info, List<Integer> available) {
-		Set<Integer> disabled = new HashSet<Integer>();
-		for (T neighbor : graph.neighbors(info)) {
-			if (graph.getColor(neighbor) != -1) {
-				disabled.add(graph.getColor(neighbor));
-			}
-		}
-		int newColor = 0;
-		if (disabled.size() == available.size()) {
-			newColor = available.get(available.size() - 1) + 1;
-			available.add(newColor);
-			graph.setColor(info, newColor);
-		} else {
-			int i = 0;
-			while (graph.getColor(info) == -1) {
-				newColor = available.get(i);
-				if (!disabled.contains(newColor)) {
-					graph.setColor(info, newColor);
-				}
-				i++;
-			}
-		}
 	}
 }

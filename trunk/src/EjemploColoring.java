@@ -11,7 +11,8 @@ public class EjemploColoring {
 
 		Graph<String> g = new RandomGraph(10, 20);
 		long time = System.currentTimeMillis();
-		Graph<State<String>> tree = g.perfectColoring();
+		ExactColoring<String> ec = new ExactColoring<String>(g);
+		Graph<State<String>> tree = ec.perfectColoring();
 		System.out.println(System.currentTimeMillis() - time);
 		GraphExporter.exportGraph("asdasdasd", g);
 		// GraphExporter.exportGraph("tree", tree);
