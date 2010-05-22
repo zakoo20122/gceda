@@ -95,17 +95,38 @@ public class InvertedMatrixGraph<T> {
 				values.add(String.valueOf(i));
 
 			init = (new Date()).getTime();
-			RandomGraph rn1;
+			RandomGraph rn;
 			Kn<String> kn = new Kn<String>(values);
 			Cn<String> cn = new Cn<String>(values);
 			InvertedMatrixGraph<String> matrix;
 
-			rn1 = new RandomGraph(30, 370);
-			matrix = new InvertedMatrixGraph<String>(kn);
-			init = (new Date()).getTime();
-			System.out.println("Numero cromático: "
-					+ matrix.getMinimalColoring().size());
-			System.out.println("Tiempo1: " + ((new Date()).getTime() - init));
+			for (int i = 0; i < 100; i++) {
+				rn = new RandomGraph(10, 25);
+				System.out.println("Conexo? " + rn.isConnected());
+				matrix = new InvertedMatrixGraph<String>(rn);
+				init = (new Date()).getTime();
+				int chromaticBit = matrix.getMinimalColoring().size();
+				System.out.println("Numero cromático BITS: " + chromaticBit);
+				System.out.println("Tiempo BITS: "
+						+ ((new Date()).getTime() - init));
+
+				GraphExporter.exportGraph("bits", rn);
+
+				init = (new Date()).getTime();
+				rn.exactColoring();
+				int chromaticEC = rn.getChromaticNumber();
+				System.out.println("Numero cromático EC: " + chromaticEC);
+				System.out.println("Tiempo EC: "
+						+ ((new Date()).getTime() - init));
+
+				GraphExporter.exportGraph("ec", rn);
+				System.out.println("");
+
+				if (chromaticBit != chromaticEC){
+					i = 1001;
+					System.out.println("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+				}
+			}
 
 		} catch (Exception e) {
 			System.out.println(e);
@@ -160,9 +181,6 @@ public class InvertedMatrixGraph<T> {
 
 		boolean last = true;
 
-		// Add this possible class
-		group.add(actual.getInfo());
-
 		for (int i = index + 1; i < vertexCount; i++) {
 			BitRow next = actual.and(rows.get(i));
 			// System.out.println(next);
@@ -172,6 +190,10 @@ public class InvertedMatrixGraph<T> {
 				// combination
 				if (next.existsRightOnes(i))
 					getRamification(next, i, group);
+
+				// Add this possible class
+				group.add(next.getInfo());
+
 				// But this ramification isn't the last, so return false
 				last = false;
 			}
@@ -186,6 +208,8 @@ public class InvertedMatrixGraph<T> {
 		// classes. Add each vertex as its own equivalence class.
 		for (int i = 0; i < vertexCount; i++) {
 			possible.add(new ArrayList<List<Integer>>());
+			possible.get(i).add(new ArrayList<Integer>());
+			possible.get(i).get(0).add(i);
 			getRamification(rows.get(i), i, possible.get(i));
 		}
 	}
