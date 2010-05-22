@@ -12,7 +12,7 @@ public class TabuSearch<T> {
 	private static int j = 4;
 
 	public static void main(String[] args) throws IOException {
-		Graph<String> g = new RandomGraph(100, 400);
+		Graph<String> g = new RandomGraph(400, 5000);
 		TabuSearch<String> ts = new TabuSearch<String>(g);
 		long time = System.currentTimeMillis();
 		ts.color();
@@ -58,9 +58,11 @@ public class TabuSearch<T> {
 	private class Solution {
 
 		Set<State> states;
-
-		public Solution(Set<State> states) {
+		int index;
+		
+		public Solution(Set<State> states, int index) {
 			this.states = states;
+			this.index = index;
 		}
 
 		public int evaluate() {
@@ -108,9 +110,8 @@ public class TabuSearch<T> {
 						// modificados
 						// ya que hashea por el info
 						aux.addAll(states);
-						set.add(new Solution(aux));
+						set.add(new Solution(aux, i));
 					}
-					memory[i] = j;
 				}
 				i++;
 			}
@@ -142,7 +143,7 @@ public class TabuSearch<T> {
 				}
 					
 			}
-
+			
 			graph.setColor(info, oldColor);
 			return true;
 		}
@@ -161,8 +162,10 @@ public class TabuSearch<T> {
 			for (Solution neighbor : localSolution.neighbors()) {
 				int neighborSolEval = neighbor.evaluate();
 				if (localSolEval > neighborSolEval) {
+					System.out.println("asdasdasd");
 					localSolution = neighbor;
 					localSolEval = neighborSolEval;
+					memory[localSolution.index] = j;
 				}
 			}
 			for (int k = 0; k < memory.length; k++)
@@ -187,7 +190,7 @@ public class TabuSearch<T> {
 			nodeColor(info, available);
 			states.add(new State(info, graph.getColor(info)));
 		}
-		return new Solution(states);
+		return new Solution(states, -1);
 	}
 
 	/*
