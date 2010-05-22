@@ -9,7 +9,7 @@ public class EjemploColoring {
 		for (int i = 0; i < 4; i++)
 			values.add(String.valueOf(Character.toChars(65 + i)));
 
-		Graph<String> g = new RandomGraph(9, 10);
+		Graph<String> g = new RandomGraph(4, 5);
 		long time = System.currentTimeMillis();
 		ExactColoring<String> ec = new ExactColoring<String>(g);
 		Graph<TreeState<String>> tree = ec.perfectColoring();
