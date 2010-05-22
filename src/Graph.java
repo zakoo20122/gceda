@@ -5,7 +5,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-
 public class Graph<V> {
 
 	private class Node {
@@ -48,7 +47,7 @@ public class Graph<V> {
 	}
 
 	private HashMap<V, Node> nodes;
-	
+	private int chromaticNumber;
 
 	public Graph() {
 		this.nodes = new HashMap<V, Node>();
@@ -225,8 +224,8 @@ public class Graph<V> {
 	}
 
 	/*
-	 * Retorna el valor de los nodos vecinos si tiene el mismo color o null en caso
-	 * que no exista ninguno
+	 * Retorna el valor de los nodos vecinos si tiene el mismo color o null en
+	 * caso que no exista ninguno
 	 */
 	public List<V> neighborsColor(V info) {
 		List<V> ans = new ArrayList<V>();
@@ -238,14 +237,19 @@ public class Graph<V> {
 		return ans;
 	}
 
-	public void exactColoring(){
+	public void exactColoring() {
 		ExactColoring<V> ec = new ExactColoring<V>(this);
 		ec.perfectColoring();
+		this.chromaticNumber = ec.getKNumber();
 	}
-	
-	public void tabuSearch(){
+
+	public int getChromaticNumber() {
+		return chromaticNumber;
+	}
+
+	public void tabuSearch() {
 		TabuSearch<V> ts = new TabuSearch<V>(this);
 		ts.coloring();
 	}
-	
+
 }

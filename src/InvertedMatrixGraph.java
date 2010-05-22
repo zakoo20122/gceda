@@ -96,10 +96,12 @@ public class InvertedMatrixGraph<T> {
 
 			init = (new Date()).getTime();
 			RandomGraph rn1;
+			Kn<String> kn = new Kn<String>(values);
+			Cn<String> cn = new Cn<String>(values);
 			InvertedMatrixGraph<String> matrix;
 
-			rn1 = new RandomGraph(50, 1220);
-			matrix = new InvertedMatrixGraph<String>(rn1);
+			rn1 = new RandomGraph(30, 370);
+			matrix = new InvertedMatrixGraph<String>(kn);
 			init = (new Date()).getTime();
 			System.out.println("Numero cromático: "
 					+ matrix.getMinimalColoring().size());
@@ -158,6 +160,9 @@ public class InvertedMatrixGraph<T> {
 
 		boolean last = true;
 
+		// Add this possible class
+		group.add(actual.getInfo());
+
 		for (int i = index + 1; i < vertexCount; i++) {
 			BitRow next = actual.and(rows.get(i));
 			// System.out.println(next);
@@ -167,8 +172,6 @@ public class InvertedMatrixGraph<T> {
 				// combination
 				if (next.existsRightOnes(i))
 					getRamification(next, i, group);
-				// Add this possible class
-				group.add(next.getInfo());
 				// But this ramification isn't the last, so return false
 				last = false;
 			}
@@ -183,8 +186,6 @@ public class InvertedMatrixGraph<T> {
 		// classes. Add each vertex as its own equivalence class.
 		for (int i = 0; i < vertexCount; i++) {
 			possible.add(new ArrayList<List<Integer>>());
-			possible.get(i).add(new ArrayList<Integer>());
-			possible.get(i).get(0).add(i);
 			getRamification(rows.get(i), i, possible.get(i));
 		}
 	}
