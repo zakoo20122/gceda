@@ -1,9 +1,11 @@
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
+import java.util.Set;
 
 public class Graph<V> {
 
@@ -235,6 +237,40 @@ public class Graph<V> {
 				ans.add(neighbor.info);
 		}
 		return ans;
+	}
+
+	public void greedy() {
+		clearColors();
+		List<V> nodeList = DFS();
+		List<Integer> avlColors = new ArrayList<Integer>();
+		int lastColor = 0;
+
+		for (V info : nodeList) {
+			Node node = nodes.get(info);
+
+			// Create a set with adjacent colors
+			Set<Integer> adjColors = new HashSet<Integer>();
+			for (Node adj : node.adj) {
+				adjColors.add(adj.color);
+			}
+
+			// Now create a list with possible colors
+			List<Integer> possibleColors = new ArrayList<Integer>();
+			for (Integer i : avlColors)
+				if (!adjColors.contains(i))
+					possibleColors.add(i);
+
+			if (possibleColors.isEmpty()) {
+				avlColors.add(lastColor);
+				possibleColors.add(lastColor);
+				lastColor++;
+			}
+			// And put a random color to this node.
+			node.color = possibleColors
+					.get((int) (Math.random() * possibleColors.size()));
+		}
+
+		this.chromaticNumber = avlColors.size();
 	}
 
 	public void exactColoring() {

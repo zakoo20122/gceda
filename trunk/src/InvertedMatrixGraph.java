@@ -50,6 +50,8 @@ public class InvertedMatrixGraph<T> {
 		}
 
 		public boolean existsRightOnes(int index) {
+			if (index + 1 > bits.length)
+				return false;
 			for (int i = index + 1; i < bits.length; i++)
 				if (bits[i])
 					return true;
@@ -101,7 +103,7 @@ public class InvertedMatrixGraph<T> {
 			InvertedMatrixGraph<String> matrix;
 
 			for (int i = 0; i < 100; i++) {
-				rn = new RandomGraph(10, 25);
+				rn = new RandomGraph(8, 15);
 				System.out.println("Conexo? " + rn.isConnected());
 				matrix = new InvertedMatrixGraph<String>(rn);
 				init = (new Date()).getTime();
@@ -113,6 +115,16 @@ public class InvertedMatrixGraph<T> {
 				GraphExporter.exportGraph("bits", rn);
 
 				init = (new Date()).getTime();
+				rn.greedy();
+				int chromaticGREEDY = rn.getChromaticNumber();
+				System.out.println("Numero cromático GREEDY: "
+						+ chromaticGREEDY);
+				System.out.println("Tiempo GREEDY: "
+						+ ((new Date()).getTime() - init));
+
+				GraphExporter.exportGraph("greedy", rn);
+
+				init = (new Date()).getTime();
 				rn.exactColoring();
 				int chromaticEC = rn.getChromaticNumber();
 				System.out.println("Numero cromático EC: " + chromaticEC);
@@ -122,9 +134,10 @@ public class InvertedMatrixGraph<T> {
 				GraphExporter.exportGraph("ec", rn);
 				System.out.println("");
 
-				if (chromaticBit != chromaticEC){
+				if (chromaticBit != chromaticEC) {
 					i = 1001;
-					System.out.println("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+					System.out
+							.println("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
 				}
 			}
 
@@ -180,25 +193,21 @@ public class InvertedMatrixGraph<T> {
 			List<List<Integer>> group) {
 
 		boolean last = true;
-
 		for (int i = index + 1; i < vertexCount; i++) {
 			BitRow next = actual.and(rows.get(i));
-			// System.out.println(next);
 
 			if (next.isConsistent()) {
-				// Go to next ramification, ONLY if there is any possible
+				// Go to next ramification, ONLY if there is any future possible
 				// combination
-				if (next.existsRightOnes(i))
+				if (next.existsRightOnes(i)) {
 					getRamification(next, i, group);
-
+					// But this ramification isn't the last, so return false
+					last = false;
+				}
 				// Add this possible class
 				group.add(next.getInfo());
-
-				// But this ramification isn't the last, so return false
-				last = false;
 			}
 		}
-
 		return last;
 	}
 
@@ -215,6 +224,7 @@ public class InvertedMatrixGraph<T> {
 	}
 
 	public List<List<T>> getMinimalColoring() {
+		graph.clearColors();
 		this.getEquivalenceClasses();
 		this.searchMinimalColoring();
 

@@ -24,15 +24,15 @@ public class ExactColoring<T> extends Coloring<T> {
 
 	public Graph<TreeState<T>> perfectColoring() {
 		available.add(0);
-		
+
 		Graph<TreeState<T>> tree = new Graph<TreeState<T>>();
 		TreeState<T> start = new TreeState<T>(null, -1);
-		//tree.addVertex(start);
-		for(T info: graph.DFS()){
-			TreeState<T> neighborState = perfectColoring(info ,tree);
-			//tree.addEdge(start, neighborState);
+		// tree.addVertex(start);
+		for (T info : graph.DFS()) {
+			TreeState<T> neighborState = perfectColoring(info, tree);
+			// tree.addEdge(start, neighborState);
 		}
-		
+
 		for (TreeState<T> state : colored) {
 			graph.setColor(state.getInfo(), state.getColor());
 		}
@@ -43,8 +43,7 @@ public class ExactColoring<T> extends Coloring<T> {
 		color(info);
 
 		TreeState<T> state = new TreeState<T>(info, graph.getColor(info));
-		//tree.addVertex(state);
-		System.out.println(quantColor);
+		// tree.addVertex(state);
 		// System.out.println(node.info + ": " + node.color);
 		for (T other : graph.DFS()) {
 			// Si la cantidad de colores disponibles iguala o supera
@@ -57,7 +56,7 @@ public class ExactColoring<T> extends Coloring<T> {
 			// Si no se coloreo aun
 			else if (graph.getColor(other) == -1) {
 				TreeState<T> neighborState = perfectColoring(other, tree);
-				//tree.addEdge(state, neighborState);
+				// tree.addEdge(state, neighborState);
 			}
 		}
 
@@ -98,8 +97,8 @@ public class ExactColoring<T> extends Coloring<T> {
 		}
 		usedColors = distinctColors.size();
 	}
-	
-	public int getKNumber(){
+
+	public int getKNumber() {
 		return usedColors;
 	}
 }
