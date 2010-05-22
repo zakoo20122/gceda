@@ -98,4 +98,8 @@ public class ExactColoring<T> extends Coloring<T> {
 		}
 		usedColors = distinctColors.size();
 	}
+	
+	public int getKNumber(){
+		return usedColors;
+	}
 }
