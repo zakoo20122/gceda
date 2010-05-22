@@ -117,7 +117,8 @@ public class InvertedMatrixGraph<T> {
 					+ matrix.getMinimalColoring().size());
 			System.out.println("Tiempo1: " + ((new Date()).getTime() - init));
 			init = (new Date()).getTime();
-			rn2.perfectColoring();
+			ExactColoring<String> ec = new ExactColoring<String>(rn2);
+			ec.perfectColoring();
 			for (String t : rn2.DFS())
 				System.out.println(rn2.getColor(t));
 			System.out.println("Tiempo2: " + ((new Date()).getTime() - init));
