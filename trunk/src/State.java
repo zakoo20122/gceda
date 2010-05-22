@@ -1,33 +1,25 @@
 public class State<V> {
 	private V info;
 	private int color;
-	private static int cant = 0;
-	//Usado para diferenciar un estado 
-	//de otro con los mismos valores
-	private int num;
-	
+
 	public State(V info, int color) {
 		this.info = info;
 		this.color = color;
-		this.num = cant;
-		cant++;		
 	}
-	
-	public int getColor(){
+
+	public int getColor() {
 		return color;
 	}
-	
-	public V getInfo(){
+
+	public V getInfo() {
 		return info;
 	}
-		
-	
 
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + num;
+		result = prime * result + ((info == null) ? 0 : info.hashCode());
 		return result;
 	}
 
@@ -41,15 +33,17 @@ public class State<V> {
 		if (getClass() != obj.getClass())
 			return false;
 		State other = (State) obj;
-		if (num != other.num)
+		if (info == null) {
+			if (other.info != null)
+				return false;
+		} else if (!info.equals(other.info))
 			return false;
 		return true;
 	}
 
+	//PARA TESTEAR
 	@Override
 	public String toString() {
-		if(info == null )
-			return "Start";
-		return info.toString() + color + num;
+		return "[info=" + info + ", color=" + color + "]";
 	}
 }
