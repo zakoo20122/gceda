@@ -66,7 +66,7 @@ public class TabuSearch<T> extends Coloring<T> {
 			int i = 0;
 			for (T info : graph.DFS()) {
 				if (memory[i] == 0) {
-					//System.out.println("Analizando: " + info);
+					// System.out.println("Analizando: " + info);
 					Set<State<T>> aux = new HashSet<State<T>>();
 					changeColor(info, aux);
 					// Agrega los estados de los nodos que no fueron
@@ -84,27 +84,27 @@ public class TabuSearch<T> extends Coloring<T> {
 			int oldColor = graph.getColor(info);
 			discolor(info);
 			int i = 0;
-			while(graph.getColor(info) == -1){
-				if(available.get(i) != oldColor)
+			while (graph.getColor(info) == -1) {
+				if (available.get(i) != oldColor)
 					graph.setColor(info, available.get(i));
 				i++;
 			}
-				
+
 			int newColor = graph.getColor(info);
 			quantColor.set(newColor, quantColor.get(newColor) + 1);
-			
+
 			ans.add(new State<T>(info, graph.getColor(info)));
 
-			//System.out.println("QC: " + quantColor);
-			//System.out.println("Av: " + available);
+			// System.out.println("QC: " + quantColor);
+			// System.out.println("Av: " + available);
 			for (T next : graph.neighborsColor(info)) {
-				//System.out.println("Actual: "+info+", color: "+graph.getColor(info));
+				// System.out.println("Actual: "+info+", color: "+graph.getColor(info));
 				if (ans.contains(new State<T>(next, -1))) {
 					discolor(info);
 					color(info);
 					ans.remove(new State<T>(info, -1));
 					ans.add(new State<T>(info, graph.getColor(info)));
-					//System.out.println("Reemplazando por: "+graph.getColor(info));
+					// System.out.println("Reemplazando por: "+graph.getColor(info));
 					return;
 				} else {
 					changeColor(next, ans);
@@ -135,15 +135,14 @@ public class TabuSearch<T> extends Coloring<T> {
 		Solution localSolution = initialSolution();
 		Solution bestSolution = localSolution;
 		int localSolEval = localSolution.evaluate(), bestSolEval = localSolEval;
-		System.out.println("Initial: "+localSolution);
+		System.out.println("Initial: " + localSolution);
 		for (int i = 0; i < MAX_TRIES; i++) {
 			for (Solution neighbor : localSolution.neighbors()) {
 				int neighborSolEval = neighbor.evaluate();
-				//System.out.println(neighbor);
+				// System.out.println(neighbor);
 				if (localSolEval > neighborSolEval) {
 					localSolution = neighbor;
 					localSolEval = neighborSolEval;
-					updateLists(localSolution.states);
 					memory[localSolution.index] = j;
 				}
 			}
@@ -154,11 +153,9 @@ public class TabuSearch<T> extends Coloring<T> {
 				System.out.println("Mejoro");
 				bestSolution = localSolution;
 				bestSolEval = localSolEval;
+				colorGraph(bestSolution);
+				updateLists(localSolution.states);
 			}
-		}
-
-		for (State<T> state : bestSolution.states) {
-			graph.setColor(state.getInfo(), state.getColor());
 		}
 	}
 
@@ -170,6 +167,12 @@ public class TabuSearch<T> extends Coloring<T> {
 			states.add(new State<T>(info, graph.getColor(info)));
 		}
 		return new Solution(states, -1);
+	}
+
+	private void colorGraph(Solution solution) {
+		for (State<T> state : solution.states) {
+			graph.setColor(state.getInfo(), state.getColor());
+		}
 	}
 
 	private void updateLists(Set<State<T>> states) {
