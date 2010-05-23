@@ -12,17 +12,16 @@ public abstract class Coloring<T> {
 	 * i-esimo
 	 */
 	protected List<Integer> quantColor;
-	
+
 	/* Lista de colores disponibles */
 	protected List<Integer> available;
 
-	public Coloring(Graph<T> graph){
+	public Coloring(Graph<T> graph) {
 		this.graph = graph;
 		this.quantColor = new ArrayList<Integer>();
 		this.available = new ArrayList<Integer>();
 	}
-	
-	
+
 	/**
 	 * Colorea un nodo intentando usar solamente los colores de available.
 	 * 
@@ -55,6 +54,8 @@ public abstract class Coloring<T> {
 				i++;
 			}
 		}
+		if (newColor > quantColor.size())
+			System.out.println("ERRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
 		if (newColor == quantColor.size())
 			quantColor.add(0);
 		quantColor.set(newColor, quantColor.get(newColor) + 1);
