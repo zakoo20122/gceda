@@ -15,11 +15,9 @@ public class ExactColoring<T> extends Coloring<T> {
 	private int usedColors;
 
 	public ExactColoring(Graph<T> graph) {
-		this.graph = graph;
+		super(graph);
 		this.colored = new ArrayList<TreeState<T>>();
 		this.usedColors = 0;
-		this.quantColor = new ArrayList<Integer>();
-		this.available = new ArrayList<Integer>();
 	}
 
 	public Graph<TreeState<T>> perfectColoring() {
