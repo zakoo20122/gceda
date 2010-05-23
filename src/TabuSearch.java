@@ -141,19 +141,19 @@ public class TabuSearch<T> extends Coloring<T> {
 				if (localSolEval > neighborSolEval) {
 					localSolution = neighbor;
 					localSolEval = neighborSolEval;
-					memory[localSolution.index] = j;
 				}
 			}
-			for (int k = 0; k < memory.length; k++)
-				if (memory[k] != 0)
-					memory[k]--;
 			if (bestSolEval > localSolEval) {
 				System.out.println("Mejoro");
 				bestSolution = localSolution;
 				bestSolEval = localSolEval;
 				colorGraph(bestSolution);
 				updateLists(localSolution.states);
+				memory[localSolution.index] = j;
 			}
+			for (int k = 0; k < memory.length; k++)
+				if (memory[k] != 0)
+					memory[k]--;
 		}
 	}
 
