@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -11,9 +12,17 @@ public abstract class Coloring<T> {
 	 * i-esimo
 	 */
 	protected List<Integer> quantColor;
+	
 	/* Lista de colores disponibles */
 	protected List<Integer> available;
 
+	public Coloring(Graph<T> graph){
+		this.graph = graph;
+		this.quantColor = new ArrayList<Integer>();
+		this.available = new ArrayList<Integer>();
+	}
+	
+	
 	/**
 	 * Colorea un nodo intentando usar solamente los colores de available.
 	 * 
