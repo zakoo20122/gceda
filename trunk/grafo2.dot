@@ -1,0 +1,11 @@
+graph G { 
+graph [splines = true] node [height=0.4 shape=circle style=filled]
+d [ color= azure4] ;
+b [ color= azure4] ;
+c [ color= crimson] ;
+a [ color= crimson] ;
+b -- c;
+c -- d;
+a -- b;
+a -- d;
+}
