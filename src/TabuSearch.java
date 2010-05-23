@@ -16,6 +16,7 @@ public class TabuSearch<T> extends Coloring<T> {
 		long time = System.currentTimeMillis();
 		ts.coloring();
 		System.out.println(System.currentTimeMillis() - time);
+		System.out.println(ts.getKNumber());
 		GraphExporter.exportGraph("ts", g);
 	}
 
@@ -186,5 +187,14 @@ public class TabuSearch<T> extends Coloring<T> {
 					quantColor.get(state.getColor()) + 1);
 		}
 		available.addAll(aux);
+	}
+
+	public int getKNumber() {
+		int ans = 0;
+		for (int num : quantColor) {
+			if (num > 0)
+				ans++;
+		}
+		return ans;
 	}
 }
