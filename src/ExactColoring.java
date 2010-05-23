@@ -20,15 +20,17 @@ public class ExactColoring<T> extends Coloring<T> {
 		this.usedColors = 0;
 	}
 
-	public Graph<TreeState<T>> perfectColoring() {
+	public Graph<TreeState<T>> perfectColoring(boolean makeTree) {
 		available.add(0);
 
 		Graph<TreeState<T>> tree = new Graph<TreeState<T>>();
 		TreeState<T> start = new TreeState<T>(null, -1);
-		// tree.addVertex(start);
+		if (makeTree)
+			tree.addVertex(start);
 		for (T info : graph.DFS()) {
-			TreeState<T> neighborState = perfectColoring(info, tree);
-			// tree.addEdge(start, neighborState);
+			TreeState<T> neighborState = perfectColoring(info, tree, makeTree);
+			if (makeTree)
+				tree.addEdge(start, neighborState);
 		}
 
 		for (TreeState<T> state : colored) {
@@ -37,11 +39,13 @@ public class ExactColoring<T> extends Coloring<T> {
 		return tree;
 	}
 
-	private TreeState<T> perfectColoring(T info, Graph<TreeState<T>> tree) {
+	private TreeState<T> perfectColoring(T info, Graph<TreeState<T>> tree,
+			boolean makeTree) {
 		color(info);
 
 		TreeState<T> state = new TreeState<T>(info, graph.getColor(info));
-		// tree.addVertex(state);
+		if (makeTree)
+			tree.addVertex(state);
 		// System.out.println(node.info + ": " + node.color);
 		for (T other : graph.DFS()) {
 			// Si la cantidad de colores disponibles iguala o supera
@@ -53,8 +57,9 @@ public class ExactColoring<T> extends Coloring<T> {
 			}
 			// Si no se coloreo aun
 			else if (graph.getColor(other) == -1) {
-				TreeState<T> neighborState = perfectColoring(other, tree);
-				// tree.addEdge(state, neighborState);
+				TreeState<T> neighborState = perfectColoring(other, tree, makeTree);
+				if (makeTree)
+					tree.addEdge(state, neighborState);
 			}
 		}
 
