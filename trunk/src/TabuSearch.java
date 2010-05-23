@@ -134,7 +134,7 @@ public class TabuSearch<T> extends Coloring<T> {
 		Solution localSolution = initialSolution();
 		Solution bestSolution = localSolution;
 		int localSolEval = localSolution.evaluate(), bestSolEval = localSolEval;
-		System.out.println("Initial: " + localSolution);
+		//System.out.println("Initial: " + localSolution);
 		for (int i = 0; i < MAX_TRIES; i++) {
 			for (Solution neighbor : localSolution.neighbors()) {
 				int neighborSolEval = neighbor.evaluate();

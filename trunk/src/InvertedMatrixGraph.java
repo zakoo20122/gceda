@@ -103,7 +103,7 @@ public class InvertedMatrixGraph<T> {
 			InvertedMatrixGraph<String> matrix;
 
 			for (int i = 0; i < 100; i++) {
-				rn = new RandomGraph(8, 15);
+				rn = new RandomGraph(10, 20);
 				System.out.println("Conexo? " + rn.isConnected());
 				matrix = new InvertedMatrixGraph<String>(rn);
 				init = (new Date()).getTime();
@@ -112,17 +112,20 @@ public class InvertedMatrixGraph<T> {
 				System.out.println("Tiempo BITS: "
 						+ ((new Date()).getTime() - init));
 
-				GraphExporter.exportGraph("bits", rn);
-
 				init = (new Date()).getTime();
 				rn.greedyColoring();
-				int chromaticGREEDY = rn.getChromaticNumber();
+				int chromaticGREEDY = rn.getApproxChromatic();
 				System.out.println("Numero cromático GREEDY: "
 						+ chromaticGREEDY);
 				System.out.println("Tiempo GREEDY: "
 						+ ((new Date()).getTime() - init));
 
-				GraphExporter.exportGraph("greedy", rn);
+				init = (new Date()).getTime();
+				rn.tabuSearch();
+				int chromaticTS = rn.getApproxChromatic();
+				System.out.println("Numero cromático TS: " + chromaticTS);
+				System.out.println("Tiempo TS: "
+						+ ((new Date()).getTime() - init));
 
 				init = (new Date()).getTime();
 				rn.exactColoring();
@@ -131,13 +134,17 @@ public class InvertedMatrixGraph<T> {
 				System.out.println("Tiempo EC: "
 						+ ((new Date()).getTime() - init));
 
-				GraphExporter.exportGraph("ec", rn);
 				System.out.println("");
 
 				if (chromaticBit != chromaticEC) {
 					i = 1001;
 					System.out
 							.println("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
+
+					GraphExporter.exportGraph("bits", rn);
+					GraphExporter.exportGraph("greedy", rn);
+					GraphExporter.exportGraph("ts", rn);
+					GraphExporter.exportGraph("ec", rn);
 				}
 			}
 

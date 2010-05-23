@@ -49,7 +49,7 @@ public class Graph<V> {
 	}
 
 	private HashMap<V, Node> nodes;
-	private int chromaticNumber;
+	private int chromaticNumber, approxChromatic;
 
 	public Graph() {
 		this.nodes = new HashMap<V, Node>();
@@ -269,6 +269,12 @@ public class Graph<V> {
 			node.color = possibleColors
 					.get((int) (Math.random() * possibleColors.size()));
 		}
+
+		approxChromatic = avlColors.size();
+	}
+
+	public int getApproxChromatic() {
+		return approxChromatic;
 	}
 
 	public void exactColoring() {
@@ -285,12 +291,15 @@ public class Graph<V> {
 	public void clearColors() {
 		for (V v : DFS())
 			this.setColor(v, -1);
+		chromaticNumber = 0;
+		approxChromatic = 0;
 	}
 
 	public void tabuSearch() {
 		clearColors();
 		TabuSearch<V> ts = new TabuSearch<V>(this);
 		ts.coloring();
+		this.approxChromatic = ts.getKNumber();
 	}
 
 }
