@@ -115,7 +115,7 @@ public class InvertedMatrixGraph<T> {
 				GraphExporter.exportGraph("bits", rn);
 
 				init = (new Date()).getTime();
-				rn.greedy();
+				rn.greedyColoring();
 				int chromaticGREEDY = rn.getChromaticNumber();
 				System.out.println("Numero cromático GREEDY: "
 						+ chromaticGREEDY);
