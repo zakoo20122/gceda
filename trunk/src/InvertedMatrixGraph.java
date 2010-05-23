@@ -121,14 +121,14 @@ public class InvertedMatrixGraph<T> {
 						+ ((new Date()).getTime() - init));
 
 				init = (new Date()).getTime();
-				rn.tabuSearch();
+				rn.tsColoring();
 				int chromaticTS = rn.getApproxChromatic();
 				System.out.println("Numero cromático TS: " + chromaticTS);
 				System.out.println("Tiempo TS: "
 						+ ((new Date()).getTime() - init));
 
 				init = (new Date()).getTime();
-				rn.exactColoring();
+				rn.exactColoring(false);
 				int chromaticEC = rn.getChromaticNumber();
 				System.out.println("Numero cromático EC: " + chromaticEC);
 				System.out.println("Tiempo EC: "

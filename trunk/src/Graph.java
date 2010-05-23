@@ -277,13 +277,22 @@ public class Graph<V> {
 		return approxChromatic;
 	}
 
-	public void exactColoring() {
+	public Graph<TreeState<V>> exactColoring(boolean makeTree) {
 		clearColors();
 		ExactColoring<V> ec = new ExactColoring<V>(this);
-		ec.perfectColoring();
+		Graph<TreeState<V>> tree = ec.perfectColoring(makeTree);
 		this.chromaticNumber = ec.getKNumber();
+		return tree;
 	}
 
+	public void tsColoring() {
+		clearColors();
+		TabuSearch<V> ts = new TabuSearch<V>(this);
+		ts.coloring();
+		this.approxChromatic = ts.getKNumber();
+	}
+
+	
 	public int getChromaticNumber() {
 		return chromaticNumber;
 	}
@@ -293,13 +302,5 @@ public class Graph<V> {
 			this.setColor(v, -1);
 		chromaticNumber = 0;
 		approxChromatic = 0;
-	}
-
-	public void tabuSearch() {
-		clearColors();
-		TabuSearch<V> ts = new TabuSearch<V>(this);
-		ts.coloring();
-		this.approxChromatic = ts.getKNumber();
-	}
-
+	}	
 }
