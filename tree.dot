@@ -1,2 +1,0 @@
-graph G { 
-graph [splines = true] node [height=0.4 shape=circle style=filled]

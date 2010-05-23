@@ -292,7 +292,6 @@ public class Graph<V> {
 		this.approxChromatic = ts.getKNumber();
 	}
 
-	
 	public int getChromaticNumber() {
 		return chromaticNumber;
 	}
@@ -302,5 +301,5 @@ public class Graph<V> {
 			this.setColor(v, -1);
 		chromaticNumber = 0;
 		approxChromatic = 0;
-	}	
+	}
 }
