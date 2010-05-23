@@ -6,7 +6,7 @@ import java.util.Set;
 
 public class TabuSearch<T> extends Coloring<T> {
 
-	private static int MAX_TRIES = 1;
+	private static int MAX_TRIES = 5;
 	private static int[] memory;
 	private static int j = 4;
 
@@ -83,13 +83,16 @@ public class TabuSearch<T> extends Coloring<T> {
 		private void changeColor(T info, Set<State<T>> ans) {
 			int oldColor = graph.getColor(info);
 			discolor(info);
-			if (oldColor == 0)
-				graph.setColor(info, oldColor + 1);
-			else
-				graph.setColor(info, oldColor - 1);
-
+			int i = 0;
+			while(graph.getColor(info) == -1){
+				if(available.get(i) != oldColor)
+					graph.setColor(info, available.get(i));
+				i++;
+			}
+				
 			int newColor = graph.getColor(info);
 			quantColor.set(newColor, quantColor.get(newColor) + 1);
+			
 			ans.add(new State<T>(info, graph.getColor(info)));
 
 			//System.out.println("QC: " + quantColor);
