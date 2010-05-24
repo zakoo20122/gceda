@@ -292,6 +292,17 @@ public class Graph<V> {
 		this.approxChromatic = ts.getKNumber();
 	}
 
+	public void bitColoring() {
+		InvertedMatrixGraph<V> matrix = new InvertedMatrixGraph<V>(this);
+		chromaticNumber = matrix.getMinimalColoring().size();
+	}
+
+	public double getDensity() {
+		double vCount = vertexCount();
+		double eCount = edgeCount();
+		return (2 * eCount) / (vCount * (vCount - 1));
+	}
+
 	public int getChromaticNumber() {
 		return chromaticNumber;
 	}

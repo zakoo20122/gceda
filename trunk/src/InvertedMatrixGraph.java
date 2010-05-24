@@ -100,14 +100,13 @@ public class InvertedMatrixGraph<T> {
 			RandomGraph rn;
 			Kn<String> kn = new Kn<String>(values);
 			Cn<String> cn = new Cn<String>(values);
-			InvertedMatrixGraph<String> matrix;
 
 			for (int i = 0; i < 100; i++) {
 				rn = new RandomGraph(10, 20);
 				System.out.println("Conexo? " + rn.isConnected());
-				matrix = new InvertedMatrixGraph<String>(rn);
 				init = (new Date()).getTime();
-				int chromaticBit = matrix.getMinimalColoring().size();
+				rn.bitColoring();
+				int chromaticBit = rn.getChromaticNumber();
 				System.out.println("Numero cromático BITS: " + chromaticBit);
 				System.out.println("Tiempo BITS: "
 						+ ((new Date()).getTime() - init));
@@ -196,7 +195,7 @@ public class InvertedMatrixGraph<T> {
 			System.out.println(br);
 	}
 
-	public boolean getRamification(BitRow actual, int index,
+	private boolean getRamification(BitRow actual, int index,
 			List<List<Integer>> group) {
 
 		boolean last = true;
@@ -218,7 +217,7 @@ public class InvertedMatrixGraph<T> {
 		return last;
 	}
 
-	public void getEquivalenceClasses() {
+	private void getEquivalenceClasses() {
 
 		// Create a group for the i-th vertex, then search for equivalence
 		// classes. Add each vertex as its own equivalence class.
