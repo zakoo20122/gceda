@@ -1,11 +1,26 @@
 graph G { 
 graph [splines = true] node [height=0.4 shape=circle style=filled]
-d [ color= azure4] ;
-b [ color= azure4] ;
-c [ color= crimson] ;
-a [ color= crimson] ;
-b -- c;
-c -- d;
-a -- b;
-a -- d;
+3 [ color= azure4] ;
+2 [ color= crimson] ;
+1 [ color= crimson] ;
+0 [ color= crimson] ;
+7 [ color= crimson] ;
+6 [ color= pink] ;
+5 [ color= azure4] ;
+4 [ color= azure4] ;
+8 [ color= pink] ;
+2 -- 4;
+1 -- 6;
+0 -- 3;
+7 -- 5;
+6 -- 0;
+6 -- 3;
+5 -- 6;
+5 -- 1;
+4 -- 1;
+4 -- 6;
+4 -- 0;
+4 -- 8;
+8 -- 7;
+8 -- 5;
 }
