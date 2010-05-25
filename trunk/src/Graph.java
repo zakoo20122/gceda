@@ -278,6 +278,12 @@ public class Graph<V> {
 	}
 
 	public Graph<TreeState<V>> exactColoring(boolean makeTree) {
+
+		if (getDensity() > 0.5 && !makeTree) {
+			bitColoring();
+			return new Graph<TreeState<V>>();
+		}
+
 		clearColors();
 		ExactColoring<V> ec = new ExactColoring<V>(this);
 		Graph<TreeState<V>> tree = ec.perfectColoring(makeTree);
