@@ -23,13 +23,9 @@ public class GraphColoring {
 						return;
 					}
 				}
-				if (makeTree || graph.getDensity() <= 0.5) {
-					Graph<TreeState<String>> tree = graph
-							.exactColoring(makeTree);
-					if (makeTree)
-						GraphExporter.exportGraph("tree - " + fileName, tree);
-				} else
-					graph.bitColoring();
+				Graph<TreeState<String>> tree = graph.exactColoring(makeTree);
+				if (makeTree)
+					GraphExporter.exportGraph("tree - " + fileName, tree);
 			} else if (method.equals("greedy")) {
 				graph.greedyColoring();
 			} else if (method.equals("ts")) {
