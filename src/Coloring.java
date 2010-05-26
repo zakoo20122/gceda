@@ -11,14 +11,14 @@ public abstract class Coloring<T> {
 	 * Contiene en cada elemento la cantidad de nodos coloreados con el color
 	 * i-esimo
 	 */
-	protected List<Integer> quantColor;
+	protected List<Integer> nodesPerColor;
 
 	/* Lista de colores disponibles */
 	protected List<Integer> available;
 
 	public Coloring(Graph<T> graph) {
 		this.graph = graph;
-		this.quantColor = new ArrayList<Integer>();
+		this.nodesPerColor = new ArrayList<Integer>();
 		this.available = new ArrayList<Integer>();
 	}
 
@@ -55,21 +55,14 @@ public abstract class Coloring<T> {
 			}
 		}
 		
-		if (newColor == quantColor.size())
-			quantColor.add(0);
-		quantColor.set(newColor, quantColor.get(newColor) + 1);
+		if (newColor == nodesPerColor.size())
+			nodesPerColor.add(0);
+		nodesPerColor.set(newColor, nodesPerColor.get(newColor) + 1);
 	}
 
 	protected void discolor(T info) {
 		int oldColor = graph.getColor(info);
 		graph.setColor(info, -1);
-		quantColor.set(oldColor, quantColor.get(oldColor) - 1);
-
-		/*
-		 * Verifica si el color del nodo que sera descoloreado no se usa mas y
-		 * en ese caso lo saca de available
-		 */
-		if (available.size() != 1 && quantColor.get(oldColor) == 0)
-			available.remove((Object) oldColor);
+		nodesPerColor.set(oldColor, nodesPerColor.get(oldColor) - 1);
 	}
 }

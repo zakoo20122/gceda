@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -14,6 +15,22 @@ public class ExactColoring<T> extends Coloring<T> {
 	 */
 	private int usedColors;
 
+	public static void main(String[] args) throws IOException{
+		List<String> values = new ArrayList<String>();
+		int size = 6;
+		for (int i = 0; i < size; i++)
+			values.add(String.valueOf(i));
+
+		Graph<String> g = new RandomGraph(10, 20);
+				
+		g.tsColoring();
+		System.out.println("TS: "+g.getApproxChromatic());
+		GraphExporter.exportGraph("ts", g);
+		g.exactColoring(false);
+		System.out.println("EC: "+g.getChromaticNumber());
+		GraphExporter.exportGraph("exact", g);
+	}
+	
 	public ExactColoring(Graph<T> graph) {
 		super(graph);
 		this.colored = new ArrayList<TreeState<T>>();
@@ -50,7 +67,7 @@ public class ExactColoring<T> extends Coloring<T> {
 			// Si la cantidad de colores disponibles iguala o supera
 			// la cantidad de colores usados en la mejor solucion
 			// hasta ahora, no sigue verificando ese nodo
-			if (usedColors != 0 && available.size() == usedColors) {
+			if (usedColors != 0 && colorsInUse() == usedColors) {
 				discolor(info);
 				return state;
 			}
@@ -65,20 +82,29 @@ public class ExactColoring<T> extends Coloring<T> {
 		// Si coloreo todos los vertices y todavia no habia llegado a una
 		// solucion o llego a una mejor que la que ya existia la reemplaza
 		if (hasAllColored()
-				&& (usedColors == 0 || available.size() < usedColors)) {
+				&& (usedColors == 0 || colorsInUse() < usedColors)) {
 			backUp();
 		}
 		discolor(info);
 		return state;
 	}
 
+	
+	private int colorsInUse(){
+		int acum = 0;
+		for(int i = 0; i < nodesPerColor.size(); i++)
+			if( nodesPerColor.get(i) > 0)
+				acum++;
+		return acum;
+	}
+	
 	/*
 	 * Verifica si coloreo a todos los nodos
 	 */
 	private boolean hasAllColored() {
 		int vertexCount = graph.vertexCount();
 		int acum = 0;
-		for (int color : quantColor) {
+		for (int color : nodesPerColor) {
 			acum += color;
 		}
 		return acum == vertexCount;
