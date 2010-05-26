@@ -41,6 +41,6 @@ public class TreeState<V> extends State<V> {
 	public String toString() {
 		if (getInfo() == null)
 			return "Start";
-		return getInfo().toString() + getColor() + "-" +num;
+		return getInfo().toString() + getColor() + num;
 	}
 }
