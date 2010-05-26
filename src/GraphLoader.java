@@ -26,6 +26,8 @@ public class GraphLoader {
 					graph.addEdge(vertex1, vertex2);
 				}
 			}
+			if(graph.isEmpty())
+				throw new IllegalArgumentException("Error. Archivo inválido");
 			return graph;
 
 		} catch (IOException exc) {
