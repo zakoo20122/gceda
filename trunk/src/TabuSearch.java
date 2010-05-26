@@ -5,9 +5,9 @@ import java.util.Set;
 
 public class TabuSearch<T> extends Coloring<T> {
 
-	private static int MAX_TRIES = 5;
+	private static int MAX_TRIES = 20;
 	private static int[] memory;
-	private static int j = 4;
+	private static int j;
 
 	private class Solution {
 
@@ -50,7 +50,7 @@ public class TabuSearch<T> extends Coloring<T> {
 		}
 
 		public Set<Solution> neighbors() {
-			List<Integer> backUpQC = new ArrayList<Integer>(quantColor);
+			List<Integer> backUpQC = new ArrayList<Integer>(nodesPerColor);
 			List<Integer> backUpAv = new ArrayList<Integer>(available);
 			Set<Solution> set = new HashSet<Solution>();
 			int i = 0;
@@ -72,39 +72,46 @@ public class TabuSearch<T> extends Coloring<T> {
 		private void changeColor(T info, Set<State<T>> ans) {
 			int oldColor = graph.getColor(info);
 			discolor(info);
-			int i = 0;
-			while (graph.getColor(info) == -1) {
-				if (i == available.size())
-					available.add(available.get(i - 1) + 1);
-				if (available.get(i) != oldColor)
-					graph.setColor(info, available.get(i));
-				i++;
-			}
-			int newColor = graph.getColor(info);
-			if (newColor == quantColor.size())
-				quantColor.add(0);
-			quantColor.set(newColor, quantColor.get(newColor) + 1);
+			modifyColor(info, oldColor, ans);
 
 			ans.add(new State<T>(info, graph.getColor(info)));
 
 			for (T next : graph.neighborsColor(info)) {
-				if (ans.contains(new State<T>(next, -1))) {
-					discolor(info);
-					color(info);
-					ans.remove(new State<T>(info, -1));
-					ans.add(new State<T>(info, graph.getColor(info)));
-					return;
-				} else {
-					changeColor(next, ans);
+				changeColor(next, ans);
+			}
+		}
+		
+		private void modifyColor(T info, int oldColor, Set<State<T>> visited){
+			Set<Integer> disabled = new HashSet<Integer>();
+			for (State<T> state : visited) {
+				disabled.add(state.getColor());
+			}
+			int newColor = 0;
+			if (disabled.size() == available.size()) {
+				newColor = available.get(available.size() - 1) + 1;
+				available.add(newColor);
+				graph.setColor(info, newColor);
+			} else {
+				int i = 0;
+				while (graph.getColor(info) == -1) {
+					newColor = available.get(i);
+					if (!disabled.contains(newColor) && newColor != oldColor) {
+						graph.setColor(info, newColor);
+					}
+					i++;
 				}
 			}
+			
+			if (newColor == nodesPerColor.size())
+				nodesPerColor.add(0);
+			nodesPerColor.set(newColor, nodesPerColor.get(newColor) + 1);
 		}
 
 		private void restore(List<Integer> backUpQC, List<Integer> backUpAv) {
 			for (State<T> state : states) {
 				graph.setColor(state.getInfo(), state.getColor());
 			}
-			quantColor = new ArrayList<Integer>(backUpQC);
+			nodesPerColor = new ArrayList<Integer>(backUpQC);
 			available = new ArrayList<Integer>(backUpAv);
 		}
 
@@ -116,6 +123,7 @@ public class TabuSearch<T> extends Coloring<T> {
 
 	public TabuSearch(Graph<T> graph) {
 		super(graph);
+		j = graph.vertexCount()/4;
 	}
 
 	public void coloring() {
@@ -151,6 +159,7 @@ public class TabuSearch<T> extends Coloring<T> {
 		}
 		if (bestSolEval < localSolEval) {
 			colorGraph(bestSolution);
+			updateLists(bestSolution.states);
 		}
 	}
 
@@ -172,23 +181,23 @@ public class TabuSearch<T> extends Coloring<T> {
 
 	private void updateLists(Set<State<T>> states) {
 		Set<Integer> aux = new HashSet<Integer>();
-		for (int i = 0; i < quantColor.size(); i++)
-			quantColor.set(i, 0);
+		for (int i = 0; i < nodesPerColor.size(); i++)
+			nodesPerColor.set(i, 0);
 		available.clear();
 		for (State<T> state : states) {
 			aux.add(state.getColor());
-			while (state.getColor() >= quantColor.size()) {
-				quantColor.add(0);
+			while (state.getColor() >= nodesPerColor.size()) {
+				nodesPerColor.add(0);
 			}
-			quantColor.set(state.getColor(),
-					quantColor.get(state.getColor()) + 1);
+			nodesPerColor.set(state.getColor(),
+					nodesPerColor.get(state.getColor()) + 1);
 		}
 		available.addAll(aux);
 	}
 
 	public int getKNumber() {
 		int ans = 0;
-		for (int num : quantColor) {
+		for (int num : nodesPerColor) {
 			if (num > 0)
 				ans++;
 		}
