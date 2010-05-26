@@ -46,7 +46,6 @@ public class ExactColoring<T> extends Coloring<T> {
 		TreeState<T> state = new TreeState<T>(info, graph.getColor(info));
 		if (makeTree)
 			tree.addVertex(state);
-		// System.out.println(node.info + ": " + node.color);
 		for (T other : graph.DFS()) {
 			// Si la cantidad de colores disponibles iguala o supera
 			// la cantidad de colores usados en la mejor solucion
@@ -62,9 +61,6 @@ public class ExactColoring<T> extends Coloring<T> {
 					tree.addEdge(state, neighborState);
 			}
 		}
-
-		// System.out.print("- used:" + usedColors);
-		// System.out.println("- available:" + available.size());
 
 		// Si coloreo todos los vertices y todavia no habia llegado a una
 		// solucion o llego a una mejor que la que ya existia la reemplaza

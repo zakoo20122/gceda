@@ -1,4 +1,3 @@
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -9,16 +8,6 @@ public class TabuSearch<T> extends Coloring<T> {
 	private static int MAX_TRIES = 5;
 	private static int[] memory;
 	private static int j = 4;
-
-	public static void main(String[] args) throws IOException {
-		Graph<String> g = new RandomGraph(10, 20);
-		TabuSearch<String> ts = new TabuSearch<String>(g);
-		long time = System.currentTimeMillis();
-		ts.coloring();
-		System.out.println(System.currentTimeMillis() - time);
-		System.out.println(ts.getKNumber());
-		GraphExporter.exportGraph("ts", g);
-	}
 
 	private class Solution {
 
@@ -133,27 +122,35 @@ public class TabuSearch<T> extends Coloring<T> {
 		memory = new int[graph.vertexCount()];
 		Solution localSolution = initialSolution();
 		Solution bestSolution = localSolution;
+		boolean change = false;
 		int localSolEval = localSolution.evaluate(), bestSolEval = localSolEval;
-		//System.out.println("Initial: " + localSolution);
 		for (int i = 0; i < MAX_TRIES; i++) {
-			for (Solution neighbor : localSolution.neighbors()) {
+			change = false;
+			Set<Solution> neighbors = localSolution.neighbors();
+			for (Solution neighbor : neighbors) {
 				int neighborSolEval = neighbor.evaluate();
 				if (localSolEval > neighborSolEval) {
 					localSolution = neighbor;
 					localSolEval = neighborSolEval;
+					change = true;
 				}
 			}
-			if (bestSolEval > localSolEval) {
-				System.out.println("Mejoro");
+			if (!change) {
+				localSolution = neighbors.iterator().next();
+				localSolEval = localSolution.evaluate();
+			} else if (bestSolEval > localSolEval) {
 				bestSolution = localSolution;
 				bestSolEval = localSolEval;
-				colorGraph(bestSolution);
-				updateLists(localSolution.states);
-				memory[localSolution.index] = j;
 			}
+			colorGraph(localSolution);
+			updateLists(localSolution.states);
+			memory[localSolution.index] = j;
 			for (int k = 0; k < memory.length; k++)
 				if (memory[k] != 0)
 					memory[k]--;
+		}
+		if (bestSolEval < localSolEval) {
+			colorGraph(bestSolution);
 		}
 	}
 
@@ -180,6 +177,9 @@ public class TabuSearch<T> extends Coloring<T> {
 		available.clear();
 		for (State<T> state : states) {
 			aux.add(state.getColor());
+			while (state.getColor() >= quantColor.size()) {
+				quantColor.add(0);
+			}
 			quantColor.set(state.getColor(),
 					quantColor.get(state.getColor()) + 1);
 		}

@@ -54,8 +54,7 @@ public abstract class Coloring<T> {
 				i++;
 			}
 		}
-		if (newColor > quantColor.size())
-			System.out.println("ERRRRRRROOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOORRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRRR");
+		
 		if (newColor == quantColor.size())
 			quantColor.add(0);
 		quantColor.set(newColor, quantColor.get(newColor) + 1);
