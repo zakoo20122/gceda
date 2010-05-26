@@ -284,6 +284,7 @@ public class Graph<V> {
 			return new Graph<TreeState<V>>();
 		}
 
+		System.out.println("hola");
 		clearColors();
 		ExactColoring<V> ec = new ExactColoring<V>(this);
 		Graph<TreeState<V>> tree = ec.perfectColoring(makeTree);
