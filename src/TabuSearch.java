@@ -165,11 +165,11 @@ public class TabuSearch<T> extends Coloring<T> {
 
 	private Solution initialSolution() {
 		Set<State<T>> states = new HashSet<State<T>>();
-		available.add(0);
+		graph.greedyColoring();
 		for (T info : graph.DFS()) {
-			color(info);
 			states.add(new State<T>(info, graph.getColor(info)));
 		}
+		updateLists(states);
 		return new Solution(states, -1);
 	}
 

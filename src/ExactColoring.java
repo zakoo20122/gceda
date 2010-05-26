@@ -17,18 +17,18 @@ public class ExactColoring<T> extends Coloring<T> {
 
 	public static void main(String[] args) throws IOException{
 		List<String> values = new ArrayList<String>();
-		int size = 6;
+		int size = 50;
 		for (int i = 0; i < size; i++)
 			values.add(String.valueOf(i));
 
-		Graph<String> g = new RandomGraph(10, 20);
+		Graph<String> g = new Kn(values);
 				
 		g.tsColoring();
 		System.out.println("TS: "+g.getApproxChromatic());
 		GraphExporter.exportGraph("ts", g);
-		g.exactColoring(false);
-		System.out.println("EC: "+g.getChromaticNumber());
-		GraphExporter.exportGraph("exact", g);
+		//g.exactColoring(false);
+		//System.out.println("EC: "+g.getChromaticNumber());
+		//GraphExporter.exportGraph("exact", g);
 	}
 	
 	public ExactColoring(Graph<T> graph) {
