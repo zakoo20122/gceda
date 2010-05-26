@@ -92,24 +92,36 @@ public class InvertedMatrixGraph<T> {
 			long init;
 
 			List<String> values = new ArrayList<String>();
-			int size = 100;
+			int size = 14;
 			for (int i = 0; i < size; i++)
 				values.add(String.valueOf(i));
 
 			init = (new Date()).getTime();
-			RandomGraph rn;
+			Graph<String> rn;
 			Kn<String> kn = new Kn<String>(values);
 			Cn<String> cn = new Cn<String>(values);
 
-			for (int i = 0; i < 100; i++) {
-				rn = new RandomGraph(10, 20);
+			for (int i = 0; i < 4; i++) {
+				switch (i) {
+				case 0:
+					rn = kn;
+					break;
+				case 1:
+					rn = cn;
+					break;
+				case 2:
+					rn = new RandomGraph(12, 31);
+					break;
+				case 3:
+					rn = new RandomGraph(12, 36);
+					break;
+				default:
+					rn = kn;
+					break;
+				}
+
+				System.out.println("NUEVO GRAFO: " + i);
 				System.out.println("Conexo? " + rn.isConnected());
-				init = (new Date()).getTime();
-				rn.bitColoring();
-				int chromaticBit = rn.getChromaticNumber();
-				System.out.println("Numero cromático BITS: " + chromaticBit);
-				System.out.println("Tiempo BITS: "
-						+ ((new Date()).getTime() - init));
 
 				init = (new Date()).getTime();
 				rn.greedyColoring();
@@ -127,6 +139,7 @@ public class InvertedMatrixGraph<T> {
 						+ ((new Date()).getTime() - init));
 
 				init = (new Date()).getTime();
+				System.out.println(rn.getDensity());
 				rn.exactColoring(false);
 				int chromaticEC = rn.getChromaticNumber();
 				System.out.println("Numero cromático EC: " + chromaticEC);
@@ -135,16 +148,6 @@ public class InvertedMatrixGraph<T> {
 
 				System.out.println("");
 
-				if (chromaticBit != chromaticEC) {
-					i = 1001;
-					System.out
-							.println("WTFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF");
-
-					GraphExporter.exportGraph("bits", rn);
-					GraphExporter.exportGraph("greedy", rn);
-					GraphExporter.exportGraph("ts", rn);
-					GraphExporter.exportGraph("ec", rn);
-				}
 			}
 
 		} catch (Exception e) {
