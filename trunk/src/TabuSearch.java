@@ -77,16 +77,19 @@ public class TabuSearch<T> extends Coloring<T> {
 			ans.add(new State<T>(info, graph.getColor(info)));
 
 			for (T next : graph.neighborsColor(info)) {
-				changeColor(next, ans);
+				if (!ans.contains(new State<T>(next, -1)))
+					changeColor(next, ans);
 			}
 		}
-		
-		private void modifyColor(T info, int oldColor, Set<State<T>> visited){
+
+		private void modifyColor(T info, int oldColor, Set<State<T>> visited) {
 			Set<Integer> disabled = new HashSet<Integer>();
-			for (State<T> state : visited) {
-				disabled.add(state.getColor());
+			for (T neighbor : graph.neighbors(info)) {
+				if (visited.contains(new State<T>(neighbor, -1)))
+					disabled.add(graph.getColor(neighbor));
 			}
 			int newColor = 0;
+
 			if (disabled.size() == available.size()) {
 				newColor = available.get(available.size() - 1) + 1;
 				available.add(newColor);
@@ -101,7 +104,7 @@ public class TabuSearch<T> extends Coloring<T> {
 					i++;
 				}
 			}
-			
+
 			if (newColor == nodesPerColor.size())
 				nodesPerColor.add(0);
 			nodesPerColor.set(newColor, nodesPerColor.get(newColor) + 1);
@@ -123,7 +126,7 @@ public class TabuSearch<T> extends Coloring<T> {
 
 	public TabuSearch(Graph<T> graph) {
 		super(graph);
-		j = graph.vertexCount()/4;
+		j = graph.vertexCount() / 4;
 	}
 
 	public void coloring() {
@@ -189,8 +192,8 @@ public class TabuSearch<T> extends Coloring<T> {
 			while (state.getColor() >= nodesPerColor.size()) {
 				nodesPerColor.add(0);
 			}
-			nodesPerColor.set(state.getColor(),
-					nodesPerColor.get(state.getColor()) + 1);
+			nodesPerColor.set(state.getColor(), nodesPerColor.get(state
+					.getColor()) + 1);
 		}
 		available.addAll(aux);
 	}
