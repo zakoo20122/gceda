@@ -4,6 +4,10 @@ import java.util.List;
 
 public class InvertedMatrixGraph<T> {
 
+	/**
+	 * La clase BitRow. Si bien podria utilizarse con verdaderos bits, esto
+	 * limitaria la cantidad de vertices a 32.
+	 */
 	protected class BitRow {
 
 		private boolean[] bits;
@@ -39,6 +43,10 @@ public class InvertedMatrixGraph<T> {
 			bits[index] = b;
 		}
 
+		/**
+		 * Y logico. No solo hace un y logico de los bits, sino que tambien hace
+		 * una union de los conjuntos.
+		 */
 		public BitRow and(BitRow other) {
 			List<Integer> elements = new ArrayList<Integer>();
 			elements.addAll(this.getInfo());
@@ -49,6 +57,11 @@ public class InvertedMatrixGraph<T> {
 			return out;
 		}
 
+		/**
+		 * Verifica si existen 1's a la derecha. Esto servira luego para podar
+		 * el codigo. (Si no existen 1's a la derecha, entonces termina una
+		 * ramificacion)
+		 */
 		public boolean existsRightOnes(int index) {
 			if (index + 1 > bits.length)
 				return false;
@@ -58,6 +71,9 @@ public class InvertedMatrixGraph<T> {
 			return false;
 		}
 
+		/**
+		 * Verifica consistencia del bitrow.
+		 */
 		public boolean isConsistent() {
 			for (int i : infoList) {
 				if (!bits[i])
@@ -77,13 +93,13 @@ public class InvertedMatrixGraph<T> {
 		}
 	}
 
-	private List<BitRow> rows;
+	private List<BitRow> rows; // la matriz
 	private Graph<T> graph;
 	private int vertexCount;
-	// A list of groups which contain possible equivalence classes
+	// Una lista de grupos que contienen posibles clases de equivalencia.
 	private List<List<List<Integer>>> possible;
 
-	// The real list of equivalence classes. This is the minimal coloring
+	// La verdadera lista de clases de equivalencia. Este es el coloreo minimo.
 	private List<List<T>> minimal;
 
 	public static void main(String args[]) {
@@ -148,6 +164,8 @@ public class InvertedMatrixGraph<T> {
 
 				System.out.println("");
 
+				GraphExporter.exportGraph("test_graph_" + i, rn);
+
 			}
 
 		} catch (Exception e) {
@@ -168,10 +186,11 @@ public class InvertedMatrixGraph<T> {
 	}
 
 	/**
-	 * Adds vertices to the inverted matrix. Note: the label(s) of each BitRow
-	 * are the indices of a DFS. The order is not important, but it needs to be
-	 * consistent. It is implicit on the actual processing code, but when
-	 * exporting the matrix, it will be needed.
+	 * Agrega los vertices del grafo a la matriz de adyacencia invertida. Nota:
+	 * los conjuntos de cada BitRow son los indices de un DFS. El orden no es
+	 * importante, pero necesita ser consistente. Esto esta implicito en el
+	 * codigo del algoritmo, pero cuando mapea vertices con colores, lo va a
+	 * necesitar.
 	 */
 	private void addVertices() {
 		for (int i = 0; i < vertexCount; i++)
@@ -179,8 +198,9 @@ public class InvertedMatrixGraph<T> {
 	}
 
 	/**
-	 * Adds edges by negating entries in the matrix. Because its an inverted
-	 * adjacency matrix, its symmetrical.
+	 * Agrega aristas mediante la negacion de entradas en la matriz. Si bien es
+	 * simetrica para grafos no dirigidos, se decidio no podarlo, por si se
+	 * llegara a utilizar con grafos dirigidos.
 	 */
 	private void addEdges() {
 		List<T> nodes = graph.DFS();
@@ -193,11 +213,21 @@ public class InvertedMatrixGraph<T> {
 				}
 	}
 
+	/**
+	 * Imprime en pantalla la matriz de adyacencia invertida.
+	 */
 	public void print() {
 		for (BitRow br : rows)
 			System.out.println(br);
 	}
 
+	/**
+	 * Halla todas las clases de equivalencia posibles, partiendo desde cada
+	 * vertice. Si halla una combinacion consistente, verifica nuevamente con
+	 * todos los vertices (pero ignora los que ya visito hasta llegar a esa
+	 * combinacion, ya que se sabe que o no son consistentes, o ya se llegaron a
+	 * resultados)
+	 */
 	private boolean getRamification(BitRow actual, int index,
 			List<List<Integer>> group) {
 
@@ -206,24 +236,27 @@ public class InvertedMatrixGraph<T> {
 			BitRow next = actual.and(rows.get(i));
 
 			if (next.isConsistent()) {
-				// Go to next ramification, ONLY if there is any future possible
-				// combination
+				// Ir a la proxima ramificacion, SOLO si hay alguna posible
+				// combinacion
 				if (next.existsRightOnes(i)) {
 					getRamification(next, i, group);
-					// But this ramification isn't the last, so return false
+					// Pero esta ramifiacacion no es la ultima, asi que
+					// continuar
 					last = false;
 				}
-				// Add this possible class
+				// Agregar esta posible clase de equivalencia.
 				group.add(next.getInfo());
 			}
 		}
 		return last;
 	}
 
+	/**
+	 * Crea un grupo para el i-esimo vertice, luego buscar clases de
+	 * equivalencia posibles. Agregar una clase de equivalencia con un unico
+	 * vertice, por si hay colores aislados (aunque sea conexo).
+	 */
 	private void getEquivalenceClasses() {
-
-		// Create a group for the i-th vertex, then search for equivalence
-		// classes. Add each vertex as its own equivalence class.
 		for (int i = 0; i < vertexCount; i++) {
 			possible.add(new ArrayList<List<Integer>>());
 			possible.get(i).add(new ArrayList<Integer>());
@@ -232,21 +265,23 @@ public class InvertedMatrixGraph<T> {
 		}
 	}
 
+	/**
+	 * Este metodo se encarga de llamar a todos los pasos del algoritmo de
+	 * coloreo.
+	 */
 	public List<List<T>> getMinimalColoring() {
 		graph.clearColors();
 		this.getEquivalenceClasses();
 		this.searchMinimalColoring();
 
-		for (T t : graph.DFS())
-			if (graph.neighborsColor(t).size() != 0)
-				System.out.println("ANDA MAL");
 		return minimal;
 	}
 
 	/**
-	 * The concept of this method is: start by combining the possible
-	 * equivalence classes grouped by vertex. Then, find the list of equivalence
-	 * classes that has minimum classes but maximum quantity of vertices.
+	 * El concepto de este metodo es: empezar combinando todas las posibles
+	 * clases de equivalencia agrupadas por vertice. Luego, encontrar el
+	 * conjunto de clases de equivalencia que tenga minima cantidad de clases
+	 * pero todos los vertices.
 	 */
 	private void searchMinimalColoring() {
 
@@ -255,7 +290,8 @@ public class InvertedMatrixGraph<T> {
 
 		List<List<Integer>> min = null;
 
-		// Now it is a matter of finding the minimal set with all vertices
+		// Ahora se trata de encontrar el conjunto con minima cantidad de clases
+		// de equivalencia, pero que contenga a TODOS los vertices.
 		for (List<List<Integer>> combination : combinedClasses) {
 
 			int sum = 0;
@@ -267,7 +303,7 @@ public class InvertedMatrixGraph<T> {
 				min = combination;
 		}
 
-		// Get the nodes, and now map the indices of DFS to the vertices
+		// Almacenar los nodos, y mapear los indices del DFS a los vertices
 		List<T> nodes = graph.DFS();
 		minimal = new ArrayList<List<T>>();
 
@@ -286,16 +322,17 @@ public class InvertedMatrixGraph<T> {
 	}
 
 	/**
-	 * Note that as the algorithm iterates over each group, it is guaranteed
-	 * that any further group won't contain the characteristic vertex of that
-	 * group. That is, the last group which may contain the I-eth vertex is the
-	 * I-eth group. This is due to the recursive algorithm that finds all
-	 * possible equivalence classes
+	 * Notar que mientras el algoritmo itera sobre cada grupo, esta garantizado
+	 * que cualquier grupo futuro no va a contener al vertice caracteristico de
+	 * este grupo. Esto significa que el ultimo grupo que puede llegar a
+	 * contener el vertice i-esimo es el i-esimo grupo. Esto se debe al
+	 * algoritmo recursivo que halla todas las posibles clases de equivalencia.
 	 */
 	private void combineClasses(int i, List<List<Integer>> ramification,
 			List<List<List<Integer>>> combinedClasses) {
 
-		// If there are no more eq. classes, add the resulting equivalence class
+		// Si no hay mas clases de equivalencia, agrega las resultantes. (caso
+		// base)
 		if (i >= possible.size() || possible.get(i).isEmpty()) {
 			combinedClasses.add(ramification);
 			return;
@@ -303,9 +340,8 @@ public class InvertedMatrixGraph<T> {
 			for (List<Integer> eqClass : possible.get(i)) {
 
 				/*
-				 * Check if this vertex has already been used. If that's the
-				 * case, ignore this branch. This is useful to get to the
-				 * isolated vertices, exploring further combinations.
+				 * Checkea si este vertice ya fue usado. Si ese es el caso,
+				 * entonces ignora esta ramificacion.
 				 */
 				boolean exists = false;
 				for (Integer v : eqClass)
@@ -315,13 +351,13 @@ public class InvertedMatrixGraph<T> {
 								exists = true;
 							}
 
-				// Add this eq Class
+				// Agregar esta clase de equivalencia
 				List<List<Integer>> next = new ArrayList<List<Integer>>();
 				next.addAll(ramification);
 				if (!exists)
 					next.add(eqClass);
 
-				// Go deeper in the tree.
+				// Profundizar en el arbol
 				combineClasses(i + 1, next, combinedClasses);
 			}
 		}

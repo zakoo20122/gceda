@@ -1,89 +1,42 @@
-NUEVO GRAFO: K14
-Conexo? true
-Numero cromático GREEDY: 14
-Tiempo GREEDY: 1
-Numero cromático TS: 14
-Tiempo TS: 11
-1.0
-Numero cromático EC: 14
-Tiempo EC: 3
-
-NUEVO GRAFO: C14
-Conexo? true
-Numero cromático GREEDY: 2
-Tiempo GREEDY: 0
-Numero cromático TS: 2
-Tiempo TS: 6
-0.15384615384615385
-hola
-Numero cromático EC: 2
-Tiempo EC: 3435
-
-NUEVO GRAFO: Random 11,25
-Conexo? true
-Numero cromático GREEDY: 4
-Tiempo GREEDY: 0
-Numero cromático TS: 4
-Tiempo TS: 2
-0.45454545454545453
-hola
-Numero cromático EC: 4
-Tiempo EC: 215473
-
-NUEVO GRAFO: Random 11,45
-Conexo? true
-Numero cromático GREEDY: 7
-Tiempo GREEDY: 0
-Numero cromático TS: 7
-Tiempo TS: 1
-0.8181818181818182
-Numero cromático EC: 7
-Tiempo EC: 6
-
-
-NUEVO GRAFO: K14
+NUEVO GRAFO: 0
 Conexo? true
 Numero cromático GREEDY: 14
 Tiempo GREEDY: 2
 Numero cromático TS: 14
-Tiempo TS: 10
+Tiempo TS: 27
 1.0
 Numero cromático EC: 14
-Tiempo EC: 4
+Tiempo EC: 3
 
-NUEVO GRAFO: C14
+NUEVO GRAFO: 1
 Conexo? true
 Numero cromático GREEDY: 2
 Tiempo GREEDY: 0
 Numero cromático TS: 2
-Tiempo TS: 6
+Tiempo TS: 9
 0.15384615384615385
 hola
 Numero cromático EC: 2
-Tiempo EC: 3445
+Tiempo EC: 3668
 
-NUEVO GRAFO: Random 12, 31
+NUEVO GRAFO: 2
 Conexo? true
-Numero cromático GREEDY: 5
+Numero cromático GREEDY: 4
 Tiempo GREEDY: 0
-Numero cromático TS: 5
-Tiempo TS: 1
+Numero cromático TS: 4
+Tiempo TS: 7
 0.4696969696969697
 hola
 Numero cromático EC: 4
-Tiempo EC: 867189
+Tiempo EC: 971740
 
-NUEVO GRAFO: Random 12, 36
+NUEVO GRAFO: 3
 Conexo? true
 Numero cromático GREEDY: 5
 Tiempo GREEDY: 0
-Numero cromático TS: 5
-Tiempo TS: 0
+Numero cromático TS: 4
+Tiempo TS: 6
 0.5454545454545454
-Numero cromático EC: 5
-Tiempo EC: 24886
+Numero cromático EC: 4
+Tiempo EC: 51286
 
-
-REFLEXION:
-Siendo Cn el peor caso (ultra factorial), es logico que se quede sin heap con 15 vertices.
-Kn parece ser el mejor caso, y parece ser polinómico.
