@@ -15,22 +15,6 @@ public class ExactColoring<T> extends Coloring<T> {
 	 */
 	private int usedColors;
 
-	public static void main(String[] args) throws IOException{
-		List<String> values = new ArrayList<String>();
-		int size = 50;
-		for (int i = 0; i < size; i++)
-			values.add(String.valueOf(i));
-
-		Graph<String> g = new Kn(values);
-				
-		g.tsColoring();
-		System.out.println("TS: "+g.getApproxChromatic());
-		GraphExporter.exportGraph("ts", g);
-		//g.exactColoring(false);
-		//System.out.println("EC: "+g.getChromaticNumber());
-		//GraphExporter.exportGraph("exact", g);
-	}
-	
 	public ExactColoring(Graph<T> graph) {
 		super(graph);
 		this.colored = new ArrayList<TreeState<T>>();
@@ -73,7 +57,8 @@ public class ExactColoring<T> extends Coloring<T> {
 			}
 			// Si no se coloreo aun
 			else if (graph.getColor(other) == -1) {
-				TreeState<T> neighborState = perfectColoring(other, tree, makeTree);
+				TreeState<T> neighborState = perfectColoring(other, tree,
+						makeTree);
 				if (makeTree)
 					tree.addEdge(state, neighborState);
 			}
@@ -81,23 +66,21 @@ public class ExactColoring<T> extends Coloring<T> {
 
 		// Si coloreo todos los vertices y todavia no habia llegado a una
 		// solucion o llego a una mejor que la que ya existia la reemplaza
-		if (hasAllColored()
-				&& (usedColors == 0 || colorsInUse() < usedColors)) {
+		if (hasAllColored() && (usedColors == 0 || colorsInUse() < usedColors)) {
 			backUp();
 		}
 		discolor(info);
 		return state;
 	}
 
-	
-	private int colorsInUse(){
+	private int colorsInUse() {
 		int acum = 0;
-		for(int i = 0; i < nodesPerColor.size(); i++)
-			if( nodesPerColor.get(i) > 0)
+		for (int i = 0; i < nodesPerColor.size(); i++)
+			if (nodesPerColor.get(i) > 0)
 				acum++;
 		return acum;
 	}
-	
+
 	/*
 	 * Verifica si coloreo a todos los nodos
 	 */

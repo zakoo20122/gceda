@@ -11,12 +11,20 @@ public class GraphExporter {
 
 	public static <T> void exportGraph(String fileName, Graph<T> graph)
 			throws IOException {
+		GraphExporter.exportGraph(fileName, graph, false);
+	}
+
+	public static <T> void exportGraph(String fileName, Graph<T> graph,
+			boolean digraph) throws IOException {
 		BufferedWriter output = null;
 		try {
-			File file = new File(fileName+".dot");
+			File file = new File(fileName + ".dot");
 			output = new BufferedWriter(new FileWriter(file));
 
-			output.write("graph G { ");
+			if (digraph)
+				output.write("digraph G { ");
+			else
+				output.write("graph G { ");
 			output.newLine();
 			output.write("graph [splines = true] "
 					+ "node [height=0.4 shape=circle style=filled]");
@@ -46,8 +54,9 @@ public class GraphExporter {
 
 			// First declare nodes and its colors
 			for (Entry<T, List<T>> entry : entries) {
-				String line = entry.getKey() + " [ color= "
-						+ getColorName(graph.getColor(entry.getKey())) + "] ;";
+				String line = entry.getKey() + " [ label= \" node = "
+						+ entry.getKey().toString() + " color = "
+						+ graph.getColor(entry.getKey()) + "\"] ;";
 				output.write(line);
 				output.newLine();
 			}
@@ -55,7 +64,8 @@ public class GraphExporter {
 			for (Entry<T, List<T>> entry : entries) {
 				for (T neighbor : entry.getValue()) {
 					String line = "";
-					line += entry.getKey() + " -- " + neighbor + ";";
+					line += entry.getKey() + (digraph ? "->" : " -- ")
+							+ neighbor + ";";
 					output.write(line);
 					output.newLine();
 				}
@@ -70,58 +80,17 @@ public class GraphExporter {
 		}
 	}
 
-	private static String getColorName(int color) {
-		String out = "";
-
-		switch (color) {
-		case 0:
-			out = "azure4";
-			break;
-		case 1:
-			out = "crimson";
-			break;
-		case 2:
-			out = "pink";
-			break;
-		case 3:
-			out = "navyblue";
-			break;
-		case 4:
-			out = "limegreen";
-			break;
-		case 5:
-			out = "sienna";
-			break;
-		case 6:
-			out = "indigo";
-			break;
-		case 7:
-			out = "darkorange";
-			break;
-		case 8:
-			out = "gold";
-			break;
-		case 9:
-			out = "darkturquoise";
-			break;
-		default:
-			out = "white";
-			break;
-
-		}
-		return out;
-	}
-	
-	public static <T> void exportColors(String fileName, Graph<T> graph) throws IOException {
+	public static <T> void exportColors(String fileName, Graph<T> graph)
+			throws IOException {
 		BufferedWriter output = null;
 		try {
-			File file = new File(fileName+".color");
+			File file = new File(fileName + ".color");
 			output = new BufferedWriter(new FileWriter(file));
 
 			List<T> nodes = graph.DFS();
-			for(T node: nodes){
+			for (T node : nodes) {
 				int color = graph.getColor(node);
-				output.write(node+"="+color);
+				output.write(node + "=" + color);
 				output.newLine();
 			}
 			output.write("}");
