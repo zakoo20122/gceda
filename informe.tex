@@ -58,7 +58,7 @@ Este algoritmo se basa en comenzar coloreando un nodo de los $n$ disponibles. Lu
 \par 
 A su vez, cuando llegó a una solución, guarda la cantidad de colores que se usaron para la misma, y cuando recorre otros caminos posibles, si requieren igual o mayor cantidad de colores, prueba con otro. Como usa la estrategia de backtracking, cada vez que termina de analizar qué sucedía si coloreaba un nodo, lo descolorea para permitir que luego sea coloreado nuevamente - tal vez, por un color distinto - habiendo llegado a él por medio de otro orden de elección de nodos. 
 \par
-Para disminuir la complejidad temporal se usaron algunas colecciones tales como quantColor, una lista de enteros que contiene la cantidad de nodos que usan el color i-esimo, y available que contiene todos los colores que se están usando hasta el momento. También se guardó en la variable usedColores, el número de colores usados en la mejor solución.\\
+Para disminuir la complejidad temporal se usaron algunas colecciones tales como nodesPerColor, una lista de enteros que contiene la cantidad de nodos que usan el color i-esimo, y available que contiene todos los colores que se están usando hasta el momento. También se guardó en la variable usedColores, el número de colores usados en la mejor solución.\\
 \par 
 El orden de complejidad de este algoritmo es $n*n!$ donde $n$ es la cantidad de vértices que tiene el grafo ya que al principio se tienen $n$ posibilidades para colorear, elegida alguna, se recorren todos los demás nodos para determinar qué color se usa. Luego se hace lo mismo para $n-1$ y así hasta que queda un nodo, por lo que $n\cdot(n\cdot(n-1)\cdot(n-2)\cdot \ldots \cdot2\cdot1) = n \cdotn! => O(n\cdotn!)$ 
 \par
@@ -90,9 +90,9 @@ El orden de complejidad espacial y temporal de este algoritmo es $O(n^{2})$, ya 
 
 \subsubsection{Algoritmo de búsqueda tabú}
 
-Comienza por una solución inicial obtenida del algoritmo greedy. Luego, calcula las soluciones vecinas que consisten en modificar el color de un nodo de forma tal que tenga un color distinto al que tenía antes y que no coincida con el color de los que ya modifico. Para los vecinos que tengan su color igual al nuevo color del nodo actual, se llama la función recursivamente.\par
+Comienza por una solución inicial obtenida del algoritmo greedy. Luego, calcula las soluciones vecinas que consisten en modificar el color de un nodo de forma tal que tenga un color distinto al que tenía antes y que no coincida con el color de los que ya modifico y son adyacentes a él. Para los nodos adyacentes que tengan su color igual al nuevo color del nodo actual y no hayan sido modificados aún por esa solución vecina, se llama la función recursivamente.\par
 La evaluación se basa simplemente en la cantidad de colores que se usaron, si la de la solución vecina es menor, la reemplaza por la misma y chequea sus vecinos. Si no encontró ninguna cuyo coloreo sea menor, escoje la primer solución vecina. Esto lo realiza una cantidad de veces determinada por la variable 'max tries'. Cabe destacar que si se elegió una solución donde se cambio el nodo $i$, ese nodo no volverá a elegirse para el método que cambia el color, hasta que pasen j iteraciones. \par
-Para calcular el orden de complejidad de este algoritmo es necesario considerar el peor caso que es un $K_{n}$. Usar el método color() de Coloring para cada nodo de un $K_{n}$ es de orden $n^{2}$, ya que para cada nodo recorre todos los demas para chequear su color y determinar cuál poner. El método changeColor tiene como peor caso hacer eso comenzando desde todos los nodos, es decir, $n\cdot n^{2} = n^{3}$. Como es el que mayor orden tiene en todo el algoritmo, $O(n^{3})$. \par
+Para calcular el orden de complejidad de este algoritmo es necesario considerar el peor caso que es un $K_{n}$. Usar el método modifycolor() para cada nodo de un $K_{n}$ es de orden $n^{2}$, ya que para cada nodo recorre todos los demas para chequear su color y determinar cuál poner. El método changeColor tiene como peor caso hacer eso comenzando desde todos los nodos, es decir, $n\cdot n^{2} = n^{3}$. Como es el que mayor orden tiene en todo el algoritmo, $O(n^{3})$. \par
 Por otro lado, su orden de complejidad espacial es $n^{2}$ porque dada una localSolution, cada vez que crea una solución vecina, la misma contiene una colección de estados. Como se crean n soluciones vecinas, el orden es $O(n^{2})$.
 
 
@@ -101,8 +101,10 @@ Por otro lado, su orden de complejidad espacial es $n^{2}$ porque dada una local
 
 \clearpage
 \section{Conclusiones}
-
-
+\par
+Para grafos grandes en los cuáles no se busque la solución exacta al problema, sino que se prefiera una solución aproximada pero rápida, conviene usar algunos de los algoritmos heurísticos. Si se busca la solución exacta al problema sin importar el tiempo que tarde, se usa el coloreo exacto. Cabe destacar que de los dos algoritmos que componen el exacto, no tiene sentido calcular el árbol de estados para el de bit ya que no se colorea un nodo por vez sino que se tienen conjuntos de nodos con el mismo color. Además si se pide el árbol para un grafo grande, el programa tirará la excepción JavaHeapError ya que el árbol tiene demasiados nodos debido a la cantidad de posibilidades que evalúa.
+\par
+Si bien la solución del algoritmo de Tabu Search parte del Greedy e intenta mejorarlo, no siempre un Tabu Search va a dar menor coloreo que un Greedy (ejecutando uno despues del otro) ya que el Greedy usa un coloreo con aletoreidad que hace que la solución varíe para un mismo grafo.
 
 
 
