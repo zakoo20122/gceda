@@ -32,13 +32,10 @@ public class GraphExporter {
 			File file = new File(fileName + ".dot");
 			output = new BufferedWriter(new FileWriter(file));
 
-			if (tree)
-				output.write("digraph G { ");
-			else
-				output.write("graph G { ");
+			output.write("graph G { ");
 			output.newLine();
-			output.write("graph [splines = true] "
-					+ "node [height=0.4 shape=circle style=filled]");
+			output.write("graph [splines = true] " + "node [height=0.4 shape="
+					+ (tree ? "rectangle" : "circle") + " style=filled]");
 			output.newLine();
 
 			List<T> nodes = graph.DFS();
@@ -64,11 +61,11 @@ public class GraphExporter {
 				String line = "";
 				if (tree) {
 					TreeState<T> state = (TreeState<T>) entry.getKey();
-					line = state.toString() + " [ label= \" node = "
+					line = state.toString() + " [ label= \"node = "
 							+ state.getInfo() + " color = " + state.getColor()
 							+ "\"] ;";
 				} else
-					line = entry.getKey() + " [ label= \" node = "
+					line = entry.getKey() + " [ label= \"node = "
 							+ entry.getKey().toString() + " color = "
 							+ graph.getColor(entry.getKey()) + "\"] ;";
 				output.write(line);
@@ -78,7 +75,7 @@ public class GraphExporter {
 			for (Entry<T, List<T>> entry : entries) {
 				for (T neighbor : entry.getValue()) {
 					String line = "";
-					line += entry.getKey() + (tree ? "->" : " -- ") + neighbor
+					line += entry.getKey() + " -- " + neighbor
 							+ ";";
 					output.write(line);
 					output.newLine();
@@ -107,7 +104,6 @@ public class GraphExporter {
 				output.write(node + "=" + color);
 				output.newLine();
 			}
-			output.write("}");
 		} finally {
 			if (output != null) {
 				output.close();

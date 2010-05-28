@@ -1,9 +1,9 @@
 graph G { 
 graph [splines = true] node [height=0.4 shape=circle style=filled]
-d [ label= " node = d color = 0"] ;
-b [ label= " node = b color = 0"] ;
-c [ label= " node = c color = 1"] ;
-a [ label= " node = a color = 1"] ;
+d [ label= "node = d color = 0"] ;
+b [ label= "node = b color = 0"] ;
+c [ label= "node = c color = 1"] ;
+a [ label= "node = a color = 1"] ;
 b -- c;
 c -- d;
 a -- b;
