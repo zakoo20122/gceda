@@ -39,10 +39,6 @@
 
 \clearpage
 
-\tableofcontents
-
-\clearpage
-
 \section{Problemas reales asociados al coloreo de un grafo}
 \begin{itemize}
 \item Se tiene una tabla de invitados donde para cada uno, aparece con quienes no se lleva bien. El objetivo es averiguar cuál es la disposición en mesas de dichos invitados de tal forma que todos se sientan a gusto y se necesiten la menor cantidad de mesas posible.
@@ -97,7 +93,19 @@ Por otro lado, su orden de complejidad espacial es $n^{2}$ porque dada una local
 
 
 \clearpage
-\section{Tablas de comparación}
+\section{Tablas de comparación (en milisegundos)}
+
+\begin{center}
+  \begin{tabular}{ | l | c | c | c | }
+    \hline
+	& Greedy & Tabu search & Exact \\ \hline
+    $K_{20}$ & 2ms & 27ms & 3ms \\ \hline
+    $C_{20}$ & 0ms & 9ms & 3668ms \\ \hline
+	$Random_{12,31}$ & 0ms & 7ms & 971740ms \\ \hline
+	$Random_{12,40}$ & 0ms & 20ms & 3170ms \\
+    \hline
+  \end{tabular}
+\end{center}
 
 \clearpage
 \section{Conclusiones}
