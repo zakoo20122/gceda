@@ -38,7 +38,8 @@
 28/05/2010
 
 \clearpage
-
+\tableofcontents
+\clearpage
 \section{Problemas reales asociados al coloreo de un grafo}
 \begin{itemize}
 \item Se tiene una tabla de invitados donde para cada uno, aparece con quienes no se lleva bien. El objetivo es averiguar cuál es la disposición en mesas de dichos invitados de tal forma que todos se sientan a gusto y se necesiten la menor cantidad de mesas posible.
@@ -56,7 +57,7 @@ A su vez, cuando llegó a una solución, guarda la cantidad de colores que se usar
 \par
 Para disminuir la complejidad temporal se usaron algunas colecciones tales como nodesPerColor, una lista de enteros que contiene la cantidad de nodos que usan el color i-esimo, y available que contiene todos los colores que se están usando hasta el momento. También se guardó en la variable usedColores, el número de colores usados en la mejor solución.\\
 \par 
-El orden de complejidad de este algoritmo es $n*n!$ donde $n$ es la cantidad de vértices que tiene el grafo ya que al principio se tienen $n$ posibilidades para colorear, elegida alguna, se recorren todos los demás nodos para determinar qué color se usa. Luego se hace lo mismo para $n-1$ y así hasta que queda un nodo, por lo que $n\cdot(n\cdot(n-1)\cdot(n-2)\cdot \ldots \cdot2\cdot1) = n \cdotn! => O(n\cdotn!)$ 
+El orden de complejidad de este algoritmo es $n\cdot n!$ donde $n$ es la cantidad de vértices que tiene el grafo ya que al principio se tienen $n$ posibilidades para colorear, elegida alguna, se recorren todos los demás nodos para determinar qué color se usa. Luego se hace lo mismo para $n-1$ y así hasta que queda un nodo, por lo que $n\cdot(n\cdot(n-1)\cdot(n-2)\cdot \ldots \cdot2\cdot1) = n \cdot n! => O(n\cdot n!)$ 
 \par
 El orden de complejidad espacial de este algoritmo es $n!$ ya que por cada llamada al método recursivo perfectColoring(), se crea un nodo que contiene el estado actual del vértice que se está coloreando y se agrega al árbol de estados. Cabe mencionar que se considera que no se realiza ninguna poda y el espacio que ocupan los nodos no se libera ya que forman parte del árbol que se devolverá en caso que el usuario así lo solicite.
 
@@ -99,8 +100,8 @@ Por otro lado, su orden de complejidad espacial es $n^{2}$ porque dada una local
   \begin{tabular}{ | l | c | c | c | }
     \hline
 	& Greedy & Tabu search & Exact \\ \hline
-    $K_{20}$ & 2ms & 27ms & 3ms \\ \hline
-    $C_{20}$ & 0ms & 9ms & 3668ms \\ \hline
+    $K_{14}$ & 2ms & 27ms & 3ms \\ \hline
+    $C_{14}$ & 0ms & 9ms & 3668ms \\ \hline
 	$Random_{12,31}$ & 0ms & 7ms & 971740ms \\ \hline
 	$Random_{12,40}$ & 0ms & 20ms & 3170ms \\
     \hline
@@ -112,7 +113,7 @@ Por otro lado, su orden de complejidad espacial es $n^{2}$ porque dada una local
 \par
 Para grafos grandes en los cuáles no se busque la solución exacta al problema, sino que se prefiera una solución aproximada pero rápida, conviene usar algunos de los algoritmos heurísticos. Si se busca la solución exacta al problema sin importar el tiempo que tarde, se usa el coloreo exacto. Cabe destacar que de los dos algoritmos que componen el exacto, no tiene sentido calcular el árbol de estados para el de bit ya que no se colorea un nodo por vez sino que se tienen conjuntos de nodos con el mismo color. Además si se pide el árbol para un grafo grande, el programa tirará la excepción JavaHeapError ya que el árbol tiene demasiados nodos debido a la cantidad de posibilidades que evalúa.
 \par
-Si bien la solución del algoritmo de Tabu Search parte del Greedy e intenta mejorarlo, no siempre un Tabu Search va a dar menor coloreo que un Greedy (ejecutando uno despues del otro) ya que el Greedy usa un coloreo con aletoreidad que hace que la solución varíe para un mismo grafo.
+Si bien la solución del algoritmo de Tabu Search parte del Greedy e intenta mejorarlo, no siempre un Tabu Search va a dar menor coloreo que un Greedy (ejecutando uno despues del otro) ya que el Greedy usa un coloreo con aleatoreidad que hace que la solución varíe para un mismo grafo.
 
 
 
