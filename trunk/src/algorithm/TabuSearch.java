@@ -1,3 +1,5 @@
+package algorithm;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -118,10 +120,6 @@ public class TabuSearch<T> extends Coloring<T> {
 			available = new ArrayList<Integer>(backUpAv);
 		}
 
-		// PARA TESTEAR
-		public String toString() {
-			return states.toString();
-		}
 	}
 
 	public TabuSearch(Graph<T> graph) {

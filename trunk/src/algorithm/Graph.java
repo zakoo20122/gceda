@@ -1,3 +1,5 @@
+package algorithm;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -279,7 +281,7 @@ public class Graph<V> {
 
 	public Graph<TreeState<V>> exactColoring(boolean makeTree) {
 
-		if (getDensity() > 0.5 && !makeTree) {
+		if (getDensity() > 0.6 && !makeTree) {
 			bitColoring();
 			return new Graph<TreeState<V>>();
 		}

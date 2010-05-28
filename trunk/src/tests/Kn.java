@@ -1,4 +1,9 @@
+package tests;
+
+
 import java.util.List;
+
+import algorithm.Graph;
 
 /**
  * A complete graph.
@@ -11,12 +16,12 @@ public class Kn<V> extends Graph<V> {
 	public Kn(List<V> values) {
 		super();
 
-		// Add vertices
+		// Agregar vertices
 		for (int i = 0; i < values.size(); i++) {
 			this.addVertex(values.get(i));
 		}
 
-		// Add edges
+		// Agregar aristas
 		for (int i = 0; i < values.size(); i++) {
 			for (int j = 0; j < values.size(); j++)
 				if (j != i)
