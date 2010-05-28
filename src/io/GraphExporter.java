@@ -10,6 +10,7 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import algorithm.Graph;
+import algorithm.TreeState;
 
 public class GraphExporter {
 
@@ -18,14 +19,20 @@ public class GraphExporter {
 		GraphExporter.exportGraph(fileName, graph, false);
 	}
 
-	public static <T> void exportGraph(String fileName, Graph<T> graph,
-			boolean digraph) throws IOException {
+	public static <T> void exportGraphTree(String filename, Graph<T> graph)
+			throws IOException {
+		GraphExporter.exportGraph(filename, graph, true);
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T> void exportGraph(String fileName, Graph<T> graph,
+			boolean tree) throws IOException {
 		BufferedWriter output = null;
 		try {
 			File file = new File(fileName + ".dot");
 			output = new BufferedWriter(new FileWriter(file));
 
-			if (digraph)
+			if (tree)
 				output.write("digraph G { ");
 			else
 				output.write("graph G { ");
@@ -54,9 +61,16 @@ public class GraphExporter {
 
 			// Primero, declarar nodos y colores
 			for (Entry<T, List<T>> entry : entries) {
-				String line = entry.getKey() + " [ label= \" node = "
-						+ entry.getKey().toString() + " color = "
-						+ graph.getColor(entry.getKey()) + "\"] ;";
+				String line = "";
+				if (tree) {
+					TreeState<T> state = (TreeState<T>) entry.getKey();
+					line = state.toString() + " [ label= \" node = "
+							+ state.getInfo() + " color = " + state.getColor()
+							+ "\"] ;";
+				} else
+					line = entry.getKey() + " [ label= \" node = "
+							+ entry.getKey().toString() + " color = "
+							+ graph.getColor(entry.getKey()) + "\"] ;";
 				output.write(line);
 				output.newLine();
 			}
@@ -64,8 +78,8 @@ public class GraphExporter {
 			for (Entry<T, List<T>> entry : entries) {
 				for (T neighbor : entry.getValue()) {
 					String line = "";
-					line += entry.getKey() + (digraph ? "->" : " -- ")
-							+ neighbor + ";";
+					line += entry.getKey() + (tree ? "->" : " -- ") + neighbor
+							+ ";";
 					output.write(line);
 					output.newLine();
 				}

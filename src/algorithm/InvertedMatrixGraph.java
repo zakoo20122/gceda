@@ -1,10 +1,6 @@
 package algorithm;
 
-import io.GraphExporter;
-import io.GraphLoader;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class InvertedMatrixGraph<T> {
@@ -106,51 +102,6 @@ public class InvertedMatrixGraph<T> {
 
 	// La verdadera lista de clases de equivalencia. Este es el coloreo minimo.
 	private List<List<T>> minimal;
-
-	public static void main(String args[]) {
-
-		try {
-			long init;
-
-			List<String> values = new ArrayList<String>();
-			int size = 14;
-			for (int i = 0; i < size; i++)
-				values.add(String.valueOf(i));
-
-			init = (new Date()).getTime();
-			//Graph<String> rn = new RandomGraph(12,40);
-			Graph<String> rn = GraphLoader.loadGraph("test_graph_3.graph"); 
-
-			System.out.println("Conexo? " + rn.isConnected());
-
-			init = (new Date()).getTime();
-			rn.greedyColoring();
-			int chromaticGREEDY = rn.getApproxChromatic();
-			System.out.println("Numero cromático GREEDY: " + chromaticGREEDY);
-			System.out.println("Tiempo GREEDY: "
-					+ ((new Date()).getTime() - init));
-
-			init = (new Date()).getTime();
-			rn.tsColoring();
-			int chromaticTS = rn.getApproxChromatic();
-			System.out.println("Numero cromático TS: " + chromaticTS);
-			System.out.println("Tiempo TS: " + ((new Date()).getTime() - init));
-
-			init = (new Date()).getTime();
-			System.out.println(rn.getDensity());
-			rn.exactColoring(false);
-			int chromaticEC = rn.getChromaticNumber();
-			System.out.println("Numero cromático EC: " + chromaticEC);
-			System.out.println("Tiempo EC: " + ((new Date()).getTime() - init));
-
-			System.out.println("");
-			GraphExporter.exportGraph("test_graph_3_2", rn);
-
-		} catch (Exception e) {
-			System.out.println(e);
-		}
-
-	}
 
 	public InvertedMatrixGraph(Graph<T> graph) {
 		this.graph = graph;
