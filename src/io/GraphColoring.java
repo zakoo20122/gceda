@@ -31,7 +31,7 @@ public class GraphColoring {
 				}
 				Graph<TreeState<String>> tree = graph.exactColoring(makeTree);
 				if (makeTree)
-					GraphExporter.exportGraph("tree - " + fileName, tree);
+					GraphExporter.exportGraphTree("tree - " + fileName, tree);
 			} else if (method.equals("greedy")) {
 				graph.greedyColoring();
 			} else if (method.equals("ts")) {

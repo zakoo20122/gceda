@@ -10,7 +10,7 @@
 	<target name="dist" depends="compile">
 		<jar destfile="tpe.jar" basedir="bin">
 			<manifest>
-				<attribute name="Main-Class" value="GraphColoring" />
+				<attribute name="Main-Class" value="io.GraphColoring" />
 			</manifest>
 		</jar>
 	</target>
