@@ -19,7 +19,7 @@ hola
 Numero cromático EC: 2
 Tiempo EC: 3668
 
-NUEVO GRAFO: 2
+NUEVO GRAFO: Random 12, 31
 Conexo? true
 Numero cromático GREEDY: 4
 Tiempo GREEDY: 0
@@ -30,13 +30,16 @@ hola
 Numero cromático EC: 4
 Tiempo EC: 971740
 
-NUEVO GRAFO: 3
+NUEVO GRAFO: Random 12,40
 Conexo? true
 Numero cromático GREEDY: 5
 Tiempo GREEDY: 0
-Numero cromático TS: 4
-Tiempo TS: 6
-0.5454545454545454
-Numero cromático EC: 4
-Tiempo EC: 51286
+Numero cromático TS: 5
+Tiempo TS: 20
+0.6060606060606061
+Numero cromático EC: 5
+Tiempo EC: 3170
+
+
+
 

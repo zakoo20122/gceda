@@ -1,3 +1,5 @@
+package tests;
+
 import java.util.List;
 
 public class WheelGraph<T> extends Cn<T> {

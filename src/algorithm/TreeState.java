@@ -1,3 +1,5 @@
+package algorithm;
+
 /**
  * Clase usada para los nodos del arbol de estados
  */

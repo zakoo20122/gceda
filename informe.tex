@@ -80,7 +80,7 @@ Debido a la complejidad espacial, ciertos grafos simplemente son imposibles de c
 Lo interesante de ambos algoritmos es que andan muy bien para ciertos casos. En particular, el algoritmo de fuerza bruta es bueno para grafos donde la poda es efectiva, como un $C_{n}$ con $n$ par, mientras que el algoritmo de matriz de adyacencia invertida es bueno para grafos con muchas aristas, ya que cuantas más aristas, menos ramificaciones hay (porque hay más dependencia entre vértices). \par
 Debido a esto, se decidió utilizar ambos algoritmos para determinados casos: si el grafo es denso se utilizará la matriz de adyacencia invertida, y sino se utilizará fuerza bruta. Para esto, se debe definir dicha densidad: \par
 La densidad de un grafo se define como $D = \frac{2|E|}{|V|\,(|V|-1)}$. \par
-Ahora bien, si la densidad es menor a 0.5, entonces se utilizará fuerza bruta, y sino, se utilizará la matriz de adyacencia invertida. Ésto proporciona una considerable ventaja a la complejidad, ya que se aprovechan las ventajas de cada algoritmo.
+Ahora bien, si la densidad es menor a 0.6, entonces se utilizará fuerza bruta, y sino, se utilizará la matriz de adyacencia invertida. Ésto proporciona una considerable ventaja a la complejidad, ya que se aprovechan las ventajas de cada algoritmo. El valor 0.6 se eligió de forma empírica, y es probable que para grafos con muchos vértices se necesite mucha memoria, y la implementación falle por un error de heap. De hecho, a medida que incrementa la cantidad de vértices, más denso debe ser el grafo para que el algoritmo funcione correctamente.
 
 \subsection{Algoritmos de aproximación}
 \subsubsection{Algoritmo greedy}

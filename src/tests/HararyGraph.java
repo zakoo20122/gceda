@@ -1,5 +1,9 @@
+package tests;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import algorithm.Graph;
 
 /**
  * Harary graph
@@ -9,13 +13,12 @@ import java.util.List;
  */
 public class HararyGraph extends Graph<Integer> {
 
-	// OJO, ANDA MAL EN ALGUNOS CASOS - REVISAR
 	public HararyGraph(int k, int n) {
 		List<Integer> values = new ArrayList<Integer>();
 		for (int i = 0; i < n; i++)
 			values.add(i);
 
-		// Build a Cn
+		// Construir un Cn
 		this.addVertex(0);
 		for (int i = 1; i < n; i++) {
 			this.addVertex(i);
@@ -23,14 +26,14 @@ public class HararyGraph extends Graph<Integer> {
 		}
 		this.addEdge(0, n - 1);
 
-		// Build first pass
+		// Primer paso
 		int r = k / 2;
 		for (int i = 0; i < n - 1; i++)
 			for (int j = i + 1; j < n; j++)
 				if (j - i <= r || n + i - j <= r)
 					this.addEdge(i, j);
 
-		// Second pass
+		// Segundo paso
 		if (k % 2 != 0) {
 			if (n % 2 == 0) {
 				for (int i = 0; i < (n / 2); i++)

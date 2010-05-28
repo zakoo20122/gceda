@@ -1,3 +1,6 @@
+package tests;
+import algorithm.Graph;
+
 /**
  * Random Graph, for time complexity testing.
  * 
@@ -14,12 +17,12 @@ public class RandomGraph extends Graph<String> {
 		if (edgeCount > ((vertexCount - 1) * vertexCount / 2))
 			edgeCount = (vertexCount - 1) * vertexCount / 2;
 
-		// Add vertices
+		// Agregar vertices
 		for (int i = 0; i < vertexCount; i++) {
 			this.addVertex(String.valueOf(i));
 		}
 
-		// Add edges
+		// Agregar aristas
 		while (edgeCount() < edgeCount || !isConnected()) {
 			int v1;
 			int v2;

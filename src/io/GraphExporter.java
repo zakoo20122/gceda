@@ -1,3 +1,5 @@
+package io;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -6,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Set;
 import java.util.Map.Entry;
+
+import algorithm.Graph;
 
 public class GraphExporter {
 
@@ -33,9 +37,7 @@ public class GraphExporter {
 			List<T> nodes = graph.DFS();
 			HashMap<T, List<T>> outGraph = new HashMap<T, List<T>>();
 
-			/*
-			 * Remove edge redundancy
-			 */
+			// Remover redundancia de aristas
 			for (T node : nodes) {
 				List<T> neighbors = graph.neighbors(node);
 				for (T neighbor : neighbors) {
@@ -47,12 +49,10 @@ public class GraphExporter {
 				outGraph.put(node, neighbors);
 			}
 
-			/*
-			 * Get data for exporting
-			 */
+			// Almacenar datos para exportar
 			Set<Entry<T, List<T>>> entries = outGraph.entrySet();
 
-			// First declare nodes and its colors
+			// Primero, declarar nodos y colores
 			for (Entry<T, List<T>> entry : entries) {
 				String line = entry.getKey() + " [ label= \" node = "
 						+ entry.getKey().toString() + " color = "

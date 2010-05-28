@@ -1,4 +1,8 @@
+package tests;
+
 import java.util.List;
+
+import algorithm.Graph;
 
 /**
  * A ciclyc graph

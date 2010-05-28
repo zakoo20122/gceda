@@ -1,3 +1,4 @@
+package algorithm;
 public class State<V> {
 	private V info;
 	private int color;
